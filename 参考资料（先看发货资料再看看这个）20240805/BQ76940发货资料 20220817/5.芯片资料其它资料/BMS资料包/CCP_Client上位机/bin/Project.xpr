@@ -1,0 +1,3 @@
+Data:2 < ADDXPR ONLY_ADD_IF_NEW "g_piBatteryTempture"
+Data:2 < ADDXPR ONLY_ADD_IF_NEW "g_puiBatteryVoltage"
+Data:2 < ADDXPR ONLY_ADD_IF_NEW "g_uiMaxVoltage"

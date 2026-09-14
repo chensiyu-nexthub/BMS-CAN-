@@ -1,0 +1,26 @@
+; Code Composer Project File, Version 2.0 (do not modify or remove this line)
+
+[Project Settings]
+ProjectDir="C:\ti\myprojects\slavedsp\"
+ProjectType=Executable
+CPUFamily=TMS320C24XX
+Tool="Compiler"
+Tool="Linker"
+Config="Debug"
+Config="Release"
+
+[Source Files]
+Source="main.c"
+
+["Compiler" Settings: "Debug"]
+Options=-g -q -fr"C:\ti\myprojects\slavedsp\Debug" -d"_DEBUG" -v2xx
+
+["Compiler" Settings: "Release"]
+Options=-q -o3 -fr"C:\ti\myprojects\slavedsp\Release" -v2xx
+
+["Linker" Settings: "Debug"]
+Options=-q -c -m".\Debug\slavedsp.map" -o".\Debug\slavedsp.out" -w -x -v2
+
+["Linker" Settings: "Release"]
+Options=-q -c -m".\Release\slavedsp.map" -o".\Release\slavedsp.out" -w -x -v2
+

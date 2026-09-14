@@ -1,0 +1,48 @@
+﻿# 压缩包
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+
+# 视频/音频
+*.wmv
+*.mp4
+*.avi
+*.mov
+*.flv
+
+# 安装程序
+*.exe
+*.msi
+
+# Keil 编译产物
+*.crf
+*.o
+*.d
+*.axf
+*.hex
+*.bin
+*.elf
+*.lst
+*.map
+*.htm
+*.dep
+*.iex
+*.sct
+*.lnp
+*.build_log.htm
+*.scvd
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 编译输出目录
+Debug/
+Release/
+Objects/
+Listings/
+
+# 日志
+*.log

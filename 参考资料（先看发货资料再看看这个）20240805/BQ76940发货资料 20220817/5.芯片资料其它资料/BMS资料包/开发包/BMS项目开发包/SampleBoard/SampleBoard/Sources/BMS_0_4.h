@@ -1,0 +1,579 @@
+#ifndef BMS_0_4_H
+#define BMS_0_4_H 1
+#define BMS_ID_HOST_RECEIVE_ORDER 0x100
+#define BMS_ID_HOST_SEND_ORDER 0x101
+
+#define BMS_ID_CLIENT_RECEIVE_ORDER 0x101
+#define BMS_ID_CLIENT_SEND_ORDER    0x104
+#define BMS_ID_HOST_WRITE_RETURN	0x105
+#define BMS_ID_HOST_ERROR			0x106
+#define BMS_ID_HOST_OUT_TIMER			0x107
+
+#define BMS_ID_SAMPLE_1_WRITE_RETURN	0x108
+#define BMS_ID_SAMPLE_2_WRITE_RETURN	0x109
+#define BMS_ID_SAMPLE_3_WRITE_RETURN	0x10a
+#define BMS_ID_SAMPLE_4_WRITE_RETURN	0x10b
+#define BMS_ID_SAMPLE_5_WRITE_RETURN	0x10c
+#define BMS_ID_SAMPLE_6_WRITE_RETURN	0x10d
+#define BMS_ID_SAMPLE_7_WRITE_RETURN	0x10e
+
+#define BMS_ID_HOST_QUANTITY_CHANGE	0x10f
+
+#define BMS_ID_EEPROM_DATA_1 0x131
+#define BMS_ID_EEPROM_DATA_2 0x132
+#define BMS_ID_EEPROM_DATA_3 0x133
+#define BMS_ID_EEPROM_DATA_4 0x134
+#define BMS_ID_EEPROM_DATA_5 0x135
+#define BMS_ID_EEPROM_DATA_6 0x136
+#define BMS_ID_EEPROM_DATA_7 0x137
+#define BMS_ID_EEPROM_DATA_8 0x138
+
+
+#define BMS_ID_HOST_DATA_END	0x200
+#define BMS_ID_HOST_DATA_1   0x201
+#define BMS_ID_HOST_DATA_2   0x202
+#define BMS_ID_HOST_DATA_3   0x203
+#define BMS_ID_HOST_DATA_4   0x204
+#define BMS_ID_HOST_DATA_5   0x205
+#define BMS_ID_HOST_DATA_6   0x206
+#define BMS_ID_HOST_DATA_7   0x207
+#define BMS_ID_HOST_DATA_8   0x208
+
+#define BMS_ID_SAMPLE_1_DATA_END	0x220
+#define BMS_ID_SAMPLE_1_DATA_1   0x221
+#define BMS_ID_SAMPLE_1_DATA_2   0x222
+#define BMS_ID_SAMPLE_1_DATA_3   0x223
+#define BMS_ID_SAMPLE_1_DATA_4   0x224
+#define BMS_ID_SAMPLE_1_DATA_5   0x225
+#define BMS_ID_SAMPLE_1_DATA_6   0x226
+#define BMS_ID_SAMPLE_1_DATA_7   0x227
+#define BMS_ID_SAMPLE_1_DATA_8   0x228
+
+#define BMS_ID_SAMPLE_2_DATA_END		0x240
+#define BMS_ID_SAMPLE_2_DATA_1   0x241
+#define BMS_ID_SAMPLE_2_DATA_2   0x242
+#define BMS_ID_SAMPLE_2_DATA_3   0x243
+#define BMS_ID_SAMPLE_2_DATA_4   0x244
+#define BMS_ID_SAMPLE_2_DATA_5   0x245
+#define BMS_ID_SAMPLE_2_DATA_6   0x246
+#define BMS_ID_SAMPLE_2_DATA_7   0x247
+#define BMS_ID_SAMPLE_2_DATA_8   0x248
+
+#define BMS_ID_SAMPLE_3_DATA_END		0x260
+#define BMS_ID_SAMPLE_3_DATA_1   0x261
+#define BMS_ID_SAMPLE_3_DATA_2   0x262
+#define BMS_ID_SAMPLE_3_DATA_3   0x263
+#define BMS_ID_SAMPLE_3_DATA_4   0x264
+#define BMS_ID_SAMPLE_3_DATA_5   0x265
+#define BMS_ID_SAMPLE_3_DATA_6   0x266
+#define BMS_ID_SAMPLE_3_DATA_7   0x267
+#define BMS_ID_SAMPLE_3_DATA_8   0x268
+
+#define BMS_ID_SAMPLE_4_DATA_END		0x280
+#define BMS_ID_SAMPLE_4_DATA_1   0x281
+#define BMS_ID_SAMPLE_4_DATA_2   0x282
+#define BMS_ID_SAMPLE_4_DATA_3   0x283
+#define BMS_ID_SAMPLE_4_DATA_4   0x284
+#define BMS_ID_SAMPLE_4_DATA_5   0x285
+#define BMS_ID_SAMPLE_4_DATA_6   0x286
+#define BMS_ID_SAMPLE_4_DATA_7   0x287
+#define BMS_ID_SAMPLE_4_DATA_8   0x288
+
+#define BMS_ID_SAMPLE_5_DATA_END		0x2a0
+#define BMS_ID_SAMPLE_5_DATA_1   0x2a1
+#define BMS_ID_SAMPLE_5_DATA_2   0x2a2
+#define BMS_ID_SAMPLE_5_DATA_3   0x2a3
+#define BMS_ID_SAMPLE_5_DATA_4   0x2a4
+#define BMS_ID_SAMPLE_5_DATA_5   0x2a5
+#define BMS_ID_SAMPLE_5_DATA_6   0x2a6
+#define BMS_ID_SAMPLE_5_DATA_7   0x2a7
+#define BMS_ID_SAMPLE_5_DATA_8   0x2a8
+
+#define BMS_ID_SAMPLE_6_DATA_END		0x2c0
+#define BMS_ID_SAMPLE_6_DATA_1   0x2c1
+#define BMS_ID_SAMPLE_6_DATA_2   0x2c2
+#define BMS_ID_SAMPLE_6_DATA_3   0x2c3
+#define BMS_ID_SAMPLE_6_DATA_4   0x2c4
+#define BMS_ID_SAMPLE_6_DATA_5   0x2c5
+#define BMS_ID_SAMPLE_6_DATA_6   0x2c6
+#define BMS_ID_SAMPLE_6_DATA_7   0x2c7
+#define BMS_ID_SAMPLE_6_DATA_8   0x2c8
+
+#define BMS_ID_SAMPLE_7_DATA_END		0x2e0
+#define BMS_ID_SAMPLE_7_DATA_1   0x2e1
+#define BMS_ID_SAMPLE_7_DATA_2   0x2e2
+#define BMS_ID_SAMPLE_7_DATA_3   0x2e3
+#define BMS_ID_SAMPLE_7_DATA_4   0x2e4
+#define BMS_ID_SAMPLE_7_DATA_5   0x2e5
+#define BMS_ID_SAMPLE_7_DATA_6   0x2e6
+#define BMS_ID_SAMPLE_7_DATA_7   0x2e7
+#define BMS_ID_SAMPLE_7_DATA_8   0x2e8
+#define BMS_ID_CURRENT         0x301
+#define BMS_ID_SYSTEM_START_TIME	0x302
+#define BMS_ID_QUANLITY	0x303
+#define BMS_ID_RELEASE_BOARD_1	0x311
+#define BMS_ID_RELEASE_BOARD_2	0x312
+#define BMS_ID_RELEASE_BOARD_3	0x313
+#define BMS_ID_RELEASE_BOARD_4	0x314
+#define BMS_ID_RELEASE_BOARD_5	0x315
+#define BMS_ID_RELEASE_BOARD_6	0x316
+#define BMS_ID_RELEASE_BOARD_7	0x317
+
+
+#define BMS_VOLTAGE_ADD_LOOP 10
+//#define HOST_BOARD		0x10
+
+#define WM_NONE 0
+
+#define WM_RELAY_CLOSENEG 1
+#define WM_RELAY_CLOSEPLUS 2
+#define WM_RELAY_CLOSEPRE 3
+#define WM_RELAY_OPENNEG 4
+#define WM_RELAY_OPENPLUS 5
+#define WM_RELAY_OPENPRE 6
+
+#define WM_BOARD_1_END 7
+#define WM_BOARD_2_END 8
+#define WM_BOARD_3_END 9
+#define WM_BOARD_4_END 0xb
+#define WM_BOARD_5_END 0xc
+#define WM_BOARD_6_END 0xd
+#define WM_BOARD_7_END 0xe
+
+#define WM_START_EQUAL 0xa
+#define WM_DATA_RETURN 0xf
+#define WM_CHECK_EMPTY_BATTERY	0x10
+
+#define WM_BOARD_1_CHECKEND 0x17
+#define WM_BOARD_2_CHECKEND 0x18
+#define WM_BOARD_3_CHECKEND 0x19
+#define WM_BOARD_4_CHECKEND 0x1b
+#define WM_BOARD_5_CHECKEND 0x1c
+#define WM_BOARD_6_CHECKEND 0x1d
+#define WM_BOARD_7_CHECKEND 0x1e
+#define WM_GET_ADC_CHANNEL_0 0x30
+#define WM_GET_ADC_CHANNEL_1 0x31
+#define WM_GET_ADC_CHANNEL_2 0x32
+#define WM_GET_ADC_CHANNEL_3 0x33
+#define WM_GET_ADC_CHANNEL_4 0x34
+#define WM_GET_ADC_CHANNEL_5 0x35
+#define WM_GET_ADC_CHANNEL_6 0x36
+#define WM_GET_ADC_CHANNEL_7 0x37
+#define WM_GET_ADC_CHANNEL_8 0x38
+#define WM_GET_ADC_CHANNEL_9 0x39
+#define WM_GET_ADC_CHANNEL_10 0x3a
+
+
+#define WM_GET_SECOND	0x40
+#define WM_GET_MINUTE	0x41
+#define WM_GET_HOUR		0x42
+#define WM_GET_DAY		0x43
+#define WM_GET_MONTH	0x44
+#define WM_GET_YEAR		0x46
+
+#define WM_SET_SECOND	0x47
+#define WM_SET_MINUTE	0x48
+#define WM_SET_HOUR		0x49
+#define WM_SET_DAY		0x4a
+#define WM_SET_MONTH	0x4b
+#define WM_SET_YEAR		0x4c
+
+#define WM_GET_ERROR_SIZE	0x50
+#define WM_GET_LAST_ERROR	0x51
+#define WM_REMOVE_ERROR		0x52
+#define WM_GET_ERROR_AT		0x53
+
+#define WM_GET_TIMER_COUNTER	0x53
+#define WM_SET_TIMER_COUNTER	0x54
+#define WM_START_TIMER			0x55
+#define WM_STOP_TIMER			0x56
+#define WM_HOLD_SYSTEM 			0x57
+#define WM_START_SYSTEM			0x58
+#define WM_GETBLOCK_EEPROM 		0x59
+
+
+#define WM_WRITE_DATA_CRC		0x60
+#define WM_WRITE_DATA_ALL               0x61
+#define WM_WRITE_DATA_ALL_1		0x61
+#define WM_WRITE_DATA_ALL_2		0x62
+#define WM_WRITE_DATA_ALL_3		0x63
+#define WM_WRITE_DATA_ALL_4		0x64
+#define WM_WRITE_DATA_ALL_5		0x65
+#define WM_WRITE_DATA_ALL_6		0x66
+#define WM_WRITE_DATA_ALL_7		0x67
+#define WM_WRITE_DATA_ALL_8		0x68
+#define WM_WRITE_DATA_ALL_9		0x69
+#define WM_WRITE_DATA_ALL_10		0x6a
+#define WM_WRITE_DATA_ALL_11		0x6b
+#define WM_WRITE_DATA_ALL_12		0x6c
+#define WM_WRITE_DATA_ALL_13		0x6d
+#define WM_WRITE_DATA_ALL_14		0x6e
+#define WM_WRITE_DATA_ALL_15		0x6f
+#define WM_WRITE_DATA_ALL_16		0x70
+#define WM_WRITE_DATA_ALL_17		0x71
+#define WM_WRITE_DATA_ALL_18		0x72
+#define WM_WRITE_DATA_ALL_19		0x73
+#define WM_WRITE_DATA_ALL_20		0x74
+#define WM_WRITE_DATA_ALL_21		0x75
+#define WM_WRITE_DATA_ALL_22		0x76
+#define WM_WRITE_DATA_ALL_23		0x77
+#define WM_WRITE_DATA_ALL_24		0x78
+#define WM_WRITE_DATA_ALL_25		0x79
+#define WM_WRITE_DATA_ALL_26		0x7a
+#define WM_WRITE_DATA_ALL_27		0x7b
+#define WM_WRITE_DATA_ALL_28		0x7c
+
+
+#define WM_READ_DATA_ALL			0x80
+#define WM_READ_DATA				0x81
+#define WM_WRITE_START              0x82
+#define WM_WRITE_END				0x83
+#define WM_WRITE_DATA				0x84
+#define WM_SHARE_MEMERY_TO_EEPROM	0x89
+#define WM_EEPROM_TO_SHARE_MEMERY	0x90
+#define WM_EMPTY_ERROR				0x91
+#define WM_GET_OUT_TIME				0x92
+#define WM_SET_OUT_TIME				0x93
+
+#define WM_GET_BATTERY_VOLTAGE_1_1 0x111
+#define WM_GET_BATTERY_VOLTAGE_1_2 0x112
+#define WM_GET_BATTERY_VOLTAGE_1_3 0x113
+#define WM_GET_BATTERY_VOLTAGE_1_4 0x114
+#define WM_GET_BATTERY_VOLTAGE_1_5 0x115
+#define WM_GET_BATTERY_VOLTAGE_1_6 0x116
+#define WM_GET_BATTERY_VOLTAGE_1_7 0x117
+#define WM_GET_BATTERY_VOLTAGE_1_8 0x118
+#define WM_GET_BATTERY_VOLTAGE_1_9 0x119
+#define WM_GET_BATTERY_VOLTAGE_1_10 0x11a
+#define WM_GET_BATTERY_VOLTAGE_1_11 0x11b
+#define WM_GET_BATTERY_VOLTAGE_1_12 0x11c
+#define WM_GET_BATTERY_VOLTAGE_1_13 0x11d
+#define WM_GET_BATTERY_VOLTAGE_1_14 0x11e
+#define WM_GET_BATTERY_VOLTAGE_1_15 0x11f
+#define WM_GET_BATTERY_VOLTAGE_1_16 0x110
+
+#define WM_GET_BATTERY_VOLTAGE_2_1 0x121
+#define WM_GET_BATTERY_VOLTAGE_2_2 0x122
+#define WM_GET_BATTERY_VOLTAGE_2_3 0x123
+#define WM_GET_BATTERY_VOLTAGE_2_4 0x124
+#define WM_GET_BATTERY_VOLTAGE_2_5 0x125
+#define WM_GET_BATTERY_VOLTAGE_2_6 0x126
+#define WM_GET_BATTERY_VOLTAGE_2_7 0x127
+#define WM_GET_BATTERY_VOLTAGE_2_8 0x128
+#define WM_GET_BATTERY_VOLTAGE_2_9 0x129
+#define WM_GET_BATTERY_VOLTAGE_2_10 0x12a
+#define WM_GET_BATTERY_VOLTAGE_2_11 0x12b
+#define WM_GET_BATTERY_VOLTAGE_2_12 0x12c
+#define WM_GET_BATTERY_VOLTAGE_2_13 0x12d
+#define WM_GET_BATTERY_VOLTAGE_2_14 0x12e
+#define WM_GET_BATTERY_VOLTAGE_2_15 0x12f
+#define WM_GET_BATTERY_VOLTAGE_2_16 0x120
+
+#define WM_GET_BATTERY_VOLTAGE_3_1 0x131
+#define WM_GET_BATTERY_VOLTAGE_3_2 0x132
+#define WM_GET_BATTERY_VOLTAGE_3_3 0x133
+#define WM_GET_BATTERY_VOLTAGE_3_4 0x134
+#define WM_GET_BATTERY_VOLTAGE_3_5 0x135
+#define WM_GET_BATTERY_VOLTAGE_3_6 0x136
+#define WM_GET_BATTERY_VOLTAGE_3_7 0x137
+#define WM_GET_BATTERY_VOLTAGE_3_8 0x138
+#define WM_GET_BATTERY_VOLTAGE_3_9 0x139
+#define WM_GET_BATTERY_VOLTAGE_3_10 0x13a
+#define WM_GET_BATTERY_VOLTAGE_3_11 0x13b
+#define WM_GET_BATTERY_VOLTAGE_3_12 0x13c
+#define WM_GET_BATTERY_VOLTAGE_3_13 0x13d
+#define WM_GET_BATTERY_VOLTAGE_3_14 0x13e
+#define WM_GET_BATTERY_VOLTAGE_3_15 0x13f
+#define WM_GET_BATTERY_VOLTAGE_3_16 0x130
+
+#define WM_GET_BATTERY_VOLTAGE_4_1 0x141
+#define WM_GET_BATTERY_VOLTAGE_4_2 0x142
+#define WM_GET_BATTERY_VOLTAGE_4_3 0x143
+#define WM_GET_BATTERY_VOLTAGE_4_4 0x144
+#define WM_GET_BATTERY_VOLTAGE_4_5 0x145
+#define WM_GET_BATTERY_VOLTAGE_4_6 0x146
+#define WM_GET_BATTERY_VOLTAGE_4_7 0x147
+#define WM_GET_BATTERY_VOLTAGE_4_8 0x148
+#define WM_GET_BATTERY_VOLTAGE_4_9 0x149
+#define WM_GET_BATTERY_VOLTAGE_4_10 0x14a
+#define WM_GET_BATTERY_VOLTAGE_4_11 0x14b
+#define WM_GET_BATTERY_VOLTAGE_4_12 0x14c
+#define WM_GET_BATTERY_VOLTAGE_4_13 0x14d
+#define WM_GET_BATTERY_VOLTAGE_4_14 0x14e
+#define WM_GET_BATTERY_VOLTAGE_4_15 0x14f
+#define WM_GET_BATTERY_VOLTAGE_4_16 0x140
+
+#define WM_GET_BATTERY_VOLTAGE_5_1 0x151
+#define WM_GET_BATTERY_VOLTAGE_5_2 0x152
+#define WM_GET_BATTERY_VOLTAGE_5_3 0x153
+#define WM_GET_BATTERY_VOLTAGE_5_4 0x154
+#define WM_GET_BATTERY_VOLTAGE_5_5 0x155
+#define WM_GET_BATTERY_VOLTAGE_5_6 0x156
+#define WM_GET_BATTERY_VOLTAGE_5_7 0x157
+#define WM_GET_BATTERY_VOLTAGE_5_8 0x158
+#define WM_GET_BATTERY_VOLTAGE_5_9 0x159
+#define WM_GET_BATTERY_VOLTAGE_5_10 0x15a
+#define WM_GET_BATTERY_VOLTAGE_5_11 0x15b
+#define WM_GET_BATTERY_VOLTAGE_5_12 0x15c
+#define WM_GET_BATTERY_VOLTAGE_5_13 0x15d
+#define WM_GET_BATTERY_VOLTAGE_5_14 0x15e
+#define WM_GET_BATTERY_VOLTAGE_5_15 0x15f
+#define WM_GET_BATTERY_VOLTAGE_5_16 0x150
+
+#define WM_GET_BATTERY_VOLTAGE_6_1 0x161
+#define WM_GET_BATTERY_VOLTAGE_6_2 0x162
+#define WM_GET_BATTERY_VOLTAGE_6_3 0x163
+#define WM_GET_BATTERY_VOLTAGE_6_4 0x164
+#define WM_GET_BATTERY_VOLTAGE_6_5 0x165
+#define WM_GET_BATTERY_VOLTAGE_6_6 0x166
+#define WM_GET_BATTERY_VOLTAGE_6_7 0x167
+#define WM_GET_BATTERY_VOLTAGE_6_8 0x168
+#define WM_GET_BATTERY_VOLTAGE_6_9 0x169
+#define WM_GET_BATTERY_VOLTAGE_6_10 0x16a
+#define WM_GET_BATTERY_VOLTAGE_6_11 0x16b
+#define WM_GET_BATTERY_VOLTAGE_6_12 0x16c
+#define WM_GET_BATTERY_VOLTAGE_6_13 0x16d
+#define WM_GET_BATTERY_VOLTAGE_6_14 0x16e
+#define WM_GET_BATTERY_VOLTAGE_6_15 0x16f
+#define WM_GET_BATTERY_VOLTAGE_6_16 0x160
+
+#define WM_GET_BATTERY_VOLTAGE_7_1 0x171
+#define WM_GET_BATTERY_VOLTAGE_7_2 0x172
+#define WM_GET_BATTERY_VOLTAGE_7_3 0x173
+#define WM_GET_BATTERY_VOLTAGE_7_4 0x174
+#define WM_GET_BATTERY_VOLTAGE_7_5 0x175
+#define WM_GET_BATTERY_VOLTAGE_7_6 0x176
+#define WM_GET_BATTERY_VOLTAGE_7_7 0x177
+#define WM_GET_BATTERY_VOLTAGE_7_8 0x178
+#define WM_GET_BATTERY_VOLTAGE_7_9 0x179
+#define WM_GET_BATTERY_VOLTAGE_7_10 0x17a
+#define WM_GET_BATTERY_VOLTAGE_7_11 0x17b
+#define WM_GET_BATTERY_VOLTAGE_7_12 0x17c
+#define WM_GET_BATTERY_VOLTAGE_7_13 0x17d
+#define WM_GET_BATTERY_VOLTAGE_7_14 0x17e
+#define WM_GET_BATTERY_VOLTAGE_7_15 0x17f
+#define WM_GET_BATTERY_VOLTAGE_7_16 0x170
+
+#define WM_GET_BATTERY_TEMPTURE_1_1 0x211
+#define WM_GET_BATTERY_TEMPTURE_1_2 0x212
+#define WM_GET_BATTERY_TEMPTURE_1_3 0x213
+#define WM_GET_BATTERY_TEMPTURE_1_4 0x214
+#define WM_GET_BATTERY_TEMPTURE_1_5 0x215
+#define WM_GET_BATTERY_TEMPTURE_1_6 0x216
+#define WM_GET_BATTERY_TEMPTURE_1_7 0x217
+#define WM_GET_BATTERY_TEMPTURE_1_8 0x218
+#define WM_GET_BATTERY_TEMPTURE_1_9 0x219
+#define WM_GET_BATTERY_TEMPTURE_1_10 0x21a
+#define WM_GET_BATTERY_TEMPTURE_1_11 0x21b
+#define WM_GET_BATTERY_TEMPTURE_1_12 0x21c
+#define WM_GET_BATTERY_TEMPTURE_1_13 0x21d
+#define WM_GET_BATTERY_TEMPTURE_1_14 0x21e
+#define WM_GET_BATTERY_TEMPTURE_1_15 0x21f
+#define WM_GET_BATTERY_TEMPTURE_1_16 0x210
+
+#define WM_GET_BATTERY_TEMPTURE_2_1 0x221
+#define WM_GET_BATTERY_TEMPTURE_2_2 0x222
+#define WM_GET_BATTERY_TEMPTURE_2_3 0x223
+#define WM_GET_BATTERY_TEMPTURE_2_4 0x224
+#define WM_GET_BATTERY_TEMPTURE_2_5 0x225
+#define WM_GET_BATTERY_TEMPTURE_2_6 0x226
+#define WM_GET_BATTERY_TEMPTURE_2_7 0x227
+#define WM_GET_BATTERY_TEMPTURE_2_8 0x228
+#define WM_GET_BATTERY_TEMPTURE_2_9 0x229
+#define WM_GET_BATTERY_TEMPTURE_2_10 0x22a
+#define WM_GET_BATTERY_TEMPTURE_2_11 0x22b
+#define WM_GET_BATTERY_TEMPTURE_2_12 0x22c
+#define WM_GET_BATTERY_TEMPTURE_2_13 0x22d
+#define WM_GET_BATTERY_TEMPTURE_2_14 0x22e
+#define WM_GET_BATTERY_TEMPTURE_2_15 0x22f
+#define WM_GET_BATTERY_TEMPTURE_2_16 0x220
+
+#define WM_GET_BATTERY_TEMPTURE_3_1 0x231
+#define WM_GET_BATTERY_TEMPTURE_3_2 0x232
+#define WM_GET_BATTERY_TEMPTURE_3_3 0x233
+#define WM_GET_BATTERY_TEMPTURE_3_4 0x234
+#define WM_GET_BATTERY_TEMPTURE_3_5 0x235
+#define WM_GET_BATTERY_TEMPTURE_3_6 0x236
+#define WM_GET_BATTERY_TEMPTURE_3_7 0x237
+#define WM_GET_BATTERY_TEMPTURE_3_8 0x238
+#define WM_GET_BATTERY_TEMPTURE_3_9 0x239
+#define WM_GET_BATTERY_TEMPTURE_3_10 0x23a
+#define WM_GET_BATTERY_TEMPTURE_3_11 0x23b
+#define WM_GET_BATTERY_TEMPTURE_3_12 0x23c
+#define WM_GET_BATTERY_TEMPTURE_3_13 0x23d
+#define WM_GET_BATTERY_TEMPTURE_3_14 0x23e
+#define WM_GET_BATTERY_TEMPTURE_3_15 0x23f
+#define WM_GET_BATTERY_TEMPTURE_3_16 0x230
+
+#define WM_GET_BATTERY_TEMPTURE_4_1 0x241
+#define WM_GET_BATTERY_TEMPTURE_4_2 0x242
+#define WM_GET_BATTERY_TEMPTURE_4_3 0x243
+#define WM_GET_BATTERY_TEMPTURE_4_4 0x244
+#define WM_GET_BATTERY_TEMPTURE_4_5 0x245
+#define WM_GET_BATTERY_TEMPTURE_4_6 0x246
+#define WM_GET_BATTERY_TEMPTURE_4_7 0x247
+#define WM_GET_BATTERY_TEMPTURE_4_8 0x248
+#define WM_GET_BATTERY_TEMPTURE_4_9 0x249
+#define WM_GET_BATTERY_TEMPTURE_4_10 0x24a
+#define WM_GET_BATTERY_TEMPTURE_4_11 0x24b
+#define WM_GET_BATTERY_TEMPTURE_4_12 0x24c
+#define WM_GET_BATTERY_TEMPTURE_4_13 0x24d
+#define WM_GET_BATTERY_TEMPTURE_4_14 0x24e
+#define WM_GET_BATTERY_TEMPTURE_4_15 0x24f
+#define WM_GET_BATTERY_TEMPTURE_4_16 0x240
+
+#define WM_GET_BATTERY_TEMPTURE_5_1 0x251
+#define WM_GET_BATTERY_TEMPTURE_5_2 0x252
+#define WM_GET_BATTERY_TEMPTURE_5_3 0x253
+#define WM_GET_BATTERY_TEMPTURE_5_4 0x254
+#define WM_GET_BATTERY_TEMPTURE_5_5 0x255
+#define WM_GET_BATTERY_TEMPTURE_5_6 0x256
+#define WM_GET_BATTERY_TEMPTURE_5_7 0x257
+#define WM_GET_BATTERY_TEMPTURE_5_8 0x258
+#define WM_GET_BATTERY_TEMPTURE_5_9 0x259
+#define WM_GET_BATTERY_TEMPTURE_5_10 0x25a
+#define WM_GET_BATTERY_TEMPTURE_5_11 0x25b
+#define WM_GET_BATTERY_TEMPTURE_5_12 0x25c
+#define WM_GET_BATTERY_TEMPTURE_5_13 0x25d
+#define WM_GET_BATTERY_TEMPTURE_5_14 0x25e
+#define WM_GET_BATTERY_TEMPTURE_5_15 0x25f
+#define WM_GET_BATTERY_TEMPTURE_5_16 0x250
+
+#define WM_GET_BATTERY_TEMPTURE_6_1 0x261
+#define WM_GET_BATTERY_TEMPTURE_6_2 0x262
+#define WM_GET_BATTERY_TEMPTURE_6_3 0x263
+#define WM_GET_BATTERY_TEMPTURE_6_4 0x264
+#define WM_GET_BATTERY_TEMPTURE_6_5 0x265
+#define WM_GET_BATTERY_TEMPTURE_6_6 0x266
+#define WM_GET_BATTERY_TEMPTURE_6_7 0x267
+#define WM_GET_BATTERY_TEMPTURE_6_8 0x268
+#define WM_GET_BATTERY_TEMPTURE_6_9 0x269
+#define WM_GET_BATTERY_TEMPTURE_6_10 0x26a
+#define WM_GET_BATTERY_TEMPTURE_6_11 0x26b
+#define WM_GET_BATTERY_TEMPTURE_6_12 0x26c
+#define WM_GET_BATTERY_TEMPTURE_6_13 0x26d
+#define WM_GET_BATTERY_TEMPTURE_6_14 0x26e
+#define WM_GET_BATTERY_TEMPTURE_6_15 0x26f
+#define WM_GET_BATTERY_TEMPTURE_6_16 0x260
+
+#define WM_GET_BATTERY_TEMPTURE_7_1 0x271
+#define WM_GET_BATTERY_TEMPTURE_7_2 0x272
+#define WM_GET_BATTERY_TEMPTURE_7_3 0x273
+#define WM_GET_BATTERY_TEMPTURE_7_4 0x274
+#define WM_GET_BATTERY_TEMPTURE_7_5 0x275
+#define WM_GET_BATTERY_TEMPTURE_7_6 0x276
+#define WM_GET_BATTERY_TEMPTURE_7_7 0x277
+#define WM_GET_BATTERY_TEMPTURE_7_8 0x278
+#define WM_GET_BATTERY_TEMPTURE_7_9 0x279
+#define WM_GET_BATTERY_TEMPTURE_7_10 0x27a
+#define WM_GET_BATTERY_TEMPTURE_7_11 0x27b
+#define WM_GET_BATTERY_TEMPTURE_7_12 0x27c
+#define WM_GET_BATTERY_TEMPTURE_7_13 0x27d
+#define WM_GET_BATTERY_TEMPTURE_7_14 0x27e
+#define WM_GET_BATTERY_TEMPTURE_7_15 0x27f
+#define WM_GET_BATTERY_TEMPTURE_7_16 0x270
+
+enum Device{HOST_BOARD=0x10,SAMPLE_BOARD_1,SAMPLE_BOARD_2,SAMPLE_BOARD_3,SAMPLE_BOARD_4,SAMPLE_BOARD_5,SAMPLE_BOARD_6,SAMPLE_BOARD_7,DEVELOP_BOARD_DZ60,DEVELOP_BOARD_XC2000};
+enum PC_Opereter{PC_SERVER_NOP,PC_SERVER_READ,PC_SERVER_WRITE,PC_SERVER_READALL,PC_SERVER_WRITEALL};
+
+typedef struct 
+{
+	unsigned int batteryIDHigh;
+	unsigned int batteryIDLow;
+	double batteryVoltageHigh;
+	double batteryVoltageLow;
+	double batteryVoltageAverage;
+	double batteryVoltageTotal;
+	double voltageBuffer[2][16];
+	double totalCurrent;
+
+	unsigned char EEPROMBuffer[64];
+
+	int f_EEPROMComplte;
+	int f_EEPROMStartReadBlock;
+	unsigned short EERPOMReadBlockAddress;
+
+
+	unsigned int f_hostBoardBusy;
+	unsigned int f_hostBoardComplete;
+	unsigned int m_hostBoardOperate;
+	unsigned int m_hostBoardAddress;
+	unsigned int m_hostBoardLength;
+	unsigned char m_hostBoardData[64];
+
+	unsigned int f_sampleBoard_1_Busy;
+	unsigned int f_sampleBoard_1_Complete;
+	unsigned int m_sampleBoard_1_Operate;
+	unsigned int m_sampleBoard_1_Address;
+	unsigned int m_sampleBoard_1_Length;
+	unsigned char m_sampleBoard_1_Data[64];
+
+	unsigned int f_sampleBoard_2_Busy;
+	unsigned int f_sampleBoard_2_Complete;
+	unsigned int m_sampleBoard_2_Operate;
+	unsigned int m_sampleBoard_2_Address;
+	unsigned int m_sampleBoard_2_Length;
+	unsigned char m_sampleBoard_2_Data[64];
+
+	unsigned int f_sampleBoard_3_Busy;
+	unsigned int f_sampleBoard_3_Complete;
+	unsigned int m_sampleBoard_3_Operate;
+	unsigned int m_sampleBoard_3_Address;
+	unsigned int m_sampleBoard_3_Length;
+	unsigned char m_sampleBoard_3_Data[64];
+
+	unsigned int f_sampleBoard_4_Busy;
+	unsigned int f_sampleBoard_4_Complete;
+	unsigned int m_sampleBoard_4_Operate;
+	unsigned int m_sampleBoard_4_Address;
+	unsigned int m_sampleBoard_4_Length;
+	unsigned char m_sampleBoard_4_Data[64];
+
+	unsigned int f_sampleBoard_5_Busy;
+	unsigned int f_sampleBoard_5_Complete;
+	unsigned int m_sampleBoard_5_Operate;
+	unsigned int m_sampleBoard_5_Address;
+	unsigned int m_sampleBoard_5_Length;
+	unsigned char m_sampleBoard_5_Data[64];
+
+	unsigned int f_sampleBoard_6_Busy;
+	unsigned int f_sampleBoard_6_Complete;
+	unsigned int m_sampleBoard_6_Operate;
+	unsigned int m_sampleBoard_6_Address;
+	unsigned int m_sampleBoard_6_Length;
+	unsigned char m_sampleBoard_6_Data[64];
+
+	unsigned int f_sampleBoard_7_Busy;
+	unsigned int f_sampleBoard_7_Complete;
+	unsigned int m_sampleBoard_7_Operate;
+	unsigned int m_sampleBoard_7_Address;
+	unsigned int m_sampleBoard_7_Length;
+	unsigned char m_sampleBoard_7_Data[64];
+
+	unsigned int m_batteryReleaseTime;
+	unsigned int m_batterySampleDelayTime;
+	unsigned int m_capacitanceChargeTime;
+	unsigned int m_capacitanceReleaseTime;
+	unsigned int m_statusSendTime;
+	unsigned int m_systemConfigure;
+	unsigned int m_batteryMap;
+	unsigned char m_tempDataBuffer[64];
+	unsigned char f_updating;
+	double	m_quantity;
+	unsigned int m_systemTimer;
+	double m_systemQuanlity;
+	
+	unsigned char m_ubBoardID;
+	unsigned short m_uwEvent;
+	unsigned char m_pubEventData[5];
+	unsigned long m_ulErrorHost;
+
+	unsigned char ubOutSecond;
+	unsigned char ubOutMinute;
+	unsigned char ubOutHour;
+	unsigned char ubOutDay;
+	unsigned char ubOutMonth;
+	unsigned char ubOutYear;
+}
+BMS_ShareMemery;
+#endif

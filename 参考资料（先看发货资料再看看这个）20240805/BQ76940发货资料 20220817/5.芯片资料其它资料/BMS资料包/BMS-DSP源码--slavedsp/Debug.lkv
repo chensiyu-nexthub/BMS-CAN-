@@ -1,0 +1,2 @@
+-z -q -c -m"./Debug/slavedsp.map" -o"./Debug/slavedsp.out" -w -x -i"C:/ti/c2400/cgtools/lib" -v2
+"C:\ti\myprojects\slavedsp\Debug\main.obj"
