@@ -38,6 +38,37 @@
 __pycache__/
 *.pyc
 
+# 依赖包与缓存
+node_modules/
+**/node_modules/
+.pnpm-store/
+
+# PPT 中间解包与调试预览
+ppt_build/pptx_unpack_*/
+ppt_build/previews_*/
+**/*.validation.json
+**/*.inspect.ndjson
+**/*.ndjson
+**/.codex-finalizer/
+
+# 排版抽查与调试提取目录
+新版页面抽查/
+最终页面抽查/
+桌面版检查页/
+开题提示词渲染检查/
+开题报告补充图片/PDF检查/
+_pdf_extracted/
+桌面版检查.*
+桌面补充图片检查*
+
+# Altium / PCB 预览与备份文件
+*.SchDocPreview
+*.PcbDocPreview
+**/__Previews/
+*.bak
+*.bak2
+*.Bak
+
 # 编译输出目录
 Debug/
 Release/

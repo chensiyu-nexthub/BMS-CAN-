@@ -1,0 +1,3831 @@
+[
+  {
+    "slide": 1,
+    "shapes": [
+      {
+        "name": "Shape 0",
+        "geometry": "roundRect",
+        "x": 0,
+        "y": 0,
+        "width": 13.33299978127734,
+        "height": 7.5,
+        "fill": "EFF9F6",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 1",
+        "geometry": "rect",
+        "x": 3,
+        "y": 2.375,
+        "width": 7.33,
+        "height": 1.75,
+        "paragraphs": [
+          {
+            "text": "开 题 报 告",
+            "size": "9200",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 2",
+        "geometry": "rect",
+        "x": 6.7,
+        "y": 4.35,
+        "width": 6.2,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "项目名称：基于 STM32 的蓝牙智能加湿器",
+            "size": "1350",
+            "color": "0E7C86",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 3",
+        "geometry": "rect",
+        "x": 0.8,
+        "y": 6.08,
+        "width": 7.8,
+        "height": 0.42,
+        "paragraphs": [
+          {
+            "text": "姓名：林鸿烨      学号：239200519",
+            "size": "1350",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 4",
+        "geometry": "rect",
+        "x": 0.8,
+        "y": 6.42,
+        "width": 7.8,
+        "height": 0.42,
+        "paragraphs": [
+          {
+            "text": "班级：230918105    指导教师：刘超",
+            "size": "1350",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slide": 2,
+    "shapes": [
+      {
+        "name": "Shape 0",
+        "geometry": "roundRect",
+        "x": 0.63,
+        "y": 0.34,
+        "width": 0.56,
+        "height": 0.56,
+        "fill": "0E7C86",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 1",
+        "geometry": "rect",
+        "x": 0.63,
+        "y": 0.42,
+        "width": 0.56,
+        "height": 0.42,
+        "paragraphs": [
+          {
+            "text": "01",
+            "size": "1500",
+            "bold": "1",
+            "color": "FFFFFF",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 2",
+        "geometry": "rect",
+        "x": 1.42,
+        "y": 0.25,
+        "width": 8.6,
+        "height": 0.78,
+        "paragraphs": [
+          {
+            "text": "选题背景与意义",
+            "size": "2500",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 4",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 1.28,
+        "width": 12.03,
+        "height": 0.82,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 5",
+        "geometry": "rect",
+        "x": 1.5,
+        "y": 1.36,
+        "width": 11,
+        "height": 0.68,
+        "paragraphs": [
+          {
+            "text": "家庭、宿舍和实验室都需要合适的湿度：太干会让人不适，太湿容易发霉。加湿器正从手动开关走向传感自动与无线智能控制。",
+            "size": "1450",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 6",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 2.35,
+        "width": 6.35,
+        "height": 4.45,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 7",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 2.35,
+        "width": 6.35,
+        "height": 4.45,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 8",
+        "geometry": "rect",
+        "x": 0.93,
+        "y": 2.59,
+        "width": 5.79,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "发展路径与本课题切入点",
+            "size": "1500",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 9",
+        "geometry": "roundRect",
+        "x": 0.95,
+        "y": 3.25,
+        "width": 0.48,
+        "height": 0.48,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 10",
+        "geometry": "rect",
+        "x": 0.95,
+        "y": 3.35,
+        "width": 0.48,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "1",
+            "size": "1300",
+            "bold": "1",
+            "color": "0E7C86",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 11",
+        "geometry": "rect",
+        "x": 1.62,
+        "y": 3.19,
+        "width": 5.15,
+        "height": 0.38,
+        "paragraphs": [
+          {
+            "text": "手动机械阶段",
+            "size": "1300",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 12",
+        "geometry": "rect",
+        "x": 1.62,
+        "y": 3.57,
+        "width": 5.15,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "只能到机旁开关，不能判断房间干湿",
+            "size": "1150",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 13",
+        "geometry": "roundRect",
+        "x": 0.95,
+        "y": 4.2,
+        "width": 0.48,
+        "height": 0.48,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 14",
+        "geometry": "rect",
+        "x": 0.95,
+        "y": 4.3,
+        "width": 0.48,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "2",
+            "size": "1300",
+            "bold": "1",
+            "color": "0E7C86",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 15",
+        "geometry": "rect",
+        "x": 1.62,
+        "y": 4.14,
+        "width": 5.15,
+        "height": 0.38,
+        "paragraphs": [
+          {
+            "text": "传感自动阶段",
+            "size": "1300",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 16",
+        "geometry": "rect",
+        "x": 1.62,
+        "y": 4.52,
+        "width": 5.15,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "单片机 + 湿度传感器，低湿开、高湿关",
+            "size": "1150",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 17",
+        "geometry": "roundRect",
+        "x": 0.95,
+        "y": 5.15,
+        "width": 0.48,
+        "height": 0.48,
+        "fill": "0E7C86",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 18",
+        "geometry": "rect",
+        "x": 0.95,
+        "y": 5.25,
+        "width": 0.48,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "3",
+            "size": "1300",
+            "bold": "1",
+            "color": "FFFFFF",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 19",
+        "geometry": "rect",
+        "x": 1.62,
+        "y": 5.09,
+        "width": 5.15,
+        "height": 0.38,
+        "paragraphs": [
+          {
+            "text": "智能一体阶段",
+            "size": "1300",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 20",
+        "geometry": "rect",
+        "x": 1.62,
+        "y": 5.47,
+        "width": 5.15,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "蓝牙手机控制、定时与多模式逐渐出现",
+            "size": "1150",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 21",
+        "geometry": "roundRect",
+        "x": 0.95,
+        "y": 6.12,
+        "width": 5.75,
+        "height": 0.7,
+        "fill": "FDE8DF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 22",
+        "geometry": "rect",
+        "x": 1.18,
+        "y": 6.2,
+        "width": 5.3,
+        "height": 0.56,
+        "paragraphs": [
+          {
+            "text": "已有研究多为“低湿开、高湿关”，蓝牙指令少，缺少定时与长时间运行保护，正是本课题的切入点。",
+            "size": "1150",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 23",
+        "geometry": "roundRect",
+        "x": 7.25,
+        "y": 2.35,
+        "width": 5.43,
+        "height": 4.45,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 24",
+        "geometry": "roundRect",
+        "x": 7.25,
+        "y": 2.35,
+        "width": 5.43,
+        "height": 4.45,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 25",
+        "geometry": "rect",
+        "x": 7.53,
+        "y": 2.59,
+        "width": 4.87,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "选题依据与三方面意义",
+            "size": "1500",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 26",
+        "geometry": "roundRect",
+        "x": 7.53,
+        "y": 3.24,
+        "width": 0.46,
+        "height": 0.46,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 27",
+        "geometry": "rect",
+        "x": 8.15,
+        "y": 3.22,
+        "width": 4.1,
+        "height": 0.34,
+        "paragraphs": [
+          {
+            "text": "实用价值",
+            "size": "1250",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 28",
+        "geometry": "rect",
+        "x": 8.15,
+        "y": 3.56,
+        "width": 4.28,
+        "height": 0.65,
+        "paragraphs": [
+          {
+            "text": "自动判断湿度，手机蓝牙控制、定时加湿，并带防干烧、防过热保护",
+            "size": "1100",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 29",
+        "geometry": "roundRect",
+        "x": 7.53,
+        "y": 4.22,
+        "width": 0.46,
+        "height": 0.46,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 30",
+        "geometry": "rect",
+        "x": 8.15,
+        "y": 4.2,
+        "width": 4.1,
+        "height": 0.34,
+        "paragraphs": [
+          {
+            "text": "学习价值",
+            "size": "1250",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 31",
+        "geometry": "rect",
+        "x": 8.15,
+        "y": 4.54,
+        "width": 4.28,
+        "height": 0.65,
+        "paragraphs": [
+          {
+            "text": "完整串联单片机、传感器、显示、蓝牙与雾化控制，训练模块化开发和排障能力",
+            "size": "1100",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 32",
+        "geometry": "roundRect",
+        "x": 7.53,
+        "y": 5.2,
+        "width": 0.46,
+        "height": 0.46,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 33",
+        "geometry": "rect",
+        "x": 8.15,
+        "y": 5.18,
+        "width": 4.1,
+        "height": 0.34,
+        "paragraphs": [
+          {
+            "text": "延伸价值",
+            "size": "1250",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 34",
+        "geometry": "rect",
+        "x": 8.15,
+        "y": 5.52,
+        "width": 4.28,
+        "height": 0.65,
+        "paragraphs": [
+          {
+            "text": "可继续扩展联网远程控制、加湿时长统计、更多数据展示",
+            "size": "1100",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 35",
+        "geometry": "roundRect",
+        "x": 7.53,
+        "y": 6.18,
+        "width": 0.46,
+        "height": 0.46,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 36",
+        "geometry": "rect",
+        "x": 8.15,
+        "y": 6.16,
+        "width": 4.1,
+        "height": 0.34,
+        "paragraphs": [
+          {
+            "text": "技术可行",
+            "size": "1250",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 37",
+        "geometry": "rect",
+        "x": 8.15,
+        "y": 6.5,
+        "width": 4.28,
+        "height": 0.65,
+        "paragraphs": [
+          {
+            "text": "STM32 性价比高、资料多，DHT11 / OLED / JDY-31 / HE-30A 均为成熟器件",
+            "size": "1100",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 38",
+        "geometry": "rect",
+        "x": 0.65,
+        "y": 7.06,
+        "width": 9.2,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "林鸿烨 ｜ 基于 STM32 的蓝牙智能加湿器 · 毕业设计开题汇报",
+            "size": "850",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 39",
+        "geometry": "rect",
+        "x": 11.85,
+        "y": 7.06,
+        "width": 0.9,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "02 / 09",
+            "size": "900",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slide": 3,
+    "shapes": [
+      {
+        "name": "Shape 0",
+        "geometry": "roundRect",
+        "x": 0.63,
+        "y": 0.34,
+        "width": 0.56,
+        "height": 0.56,
+        "fill": "0E7C86",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 1",
+        "geometry": "rect",
+        "x": 0.63,
+        "y": 0.42,
+        "width": 0.56,
+        "height": 0.42,
+        "paragraphs": [
+          {
+            "text": "02",
+            "size": "1500",
+            "bold": "1",
+            "color": "FFFFFF",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 2",
+        "geometry": "rect",
+        "x": 1.42,
+        "y": 0.25,
+        "width": 8.6,
+        "height": 0.78,
+        "paragraphs": [
+          {
+            "text": "毕设内容：做一台基于STM32的蓝牙加湿器",
+            "size": "2500",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 4",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 1.28,
+        "width": 12.03,
+        "height": 0.8,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 5",
+        "geometry": "rect",
+        "x": 1.5,
+        "y": 1.34,
+        "width": 11.05,
+        "height": 0.7,
+        "paragraphs": [
+          {
+            "text": "以 STM32F103C8T6 为控制核心制作蓝牙智能加湿器样机：测量并显示温湿度，由手机蓝牙控制加湿，支持手动、自动、定时与保护。",
+            "size": "1400",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 6",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 2.3,
+        "width": 6,
+        "height": 4.5,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 7",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 2.3,
+        "width": 6,
+        "height": 4.5,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 8",
+        "geometry": "rect",
+        "x": 0.93,
+        "y": 2.54,
+        "width": 5.44,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "主要硬件与职责",
+            "size": "1500",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 9",
+        "geometry": "roundRect",
+        "x": 0.98,
+        "y": 3.22,
+        "width": 2.58,
+        "height": 0.9,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 10",
+        "geometry": "rect",
+        "x": 1.12,
+        "y": 3.32,
+        "width": 2.3,
+        "height": 0.32,
+        "paragraphs": [
+          {
+            "text": "STM32F103C8T6",
+            "size": "1080",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 11",
+        "geometry": "rect",
+        "x": 1.12,
+        "y": 3.64,
+        "width": 2.32,
+        "height": 0.46,
+        "paragraphs": [
+          {
+            "text": "控制核心：读传感器、处理蓝牙指令并驱动输出",
+            "size": "900",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 12",
+        "geometry": "roundRect",
+        "x": 3.72,
+        "y": 3.22,
+        "width": 2.58,
+        "height": 0.9,
+        "fill": "F6FCFA",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 13",
+        "geometry": "rect",
+        "x": 3.86,
+        "y": 3.32,
+        "width": 2.3,
+        "height": 0.32,
+        "paragraphs": [
+          {
+            "text": "DHT11",
+            "size": "1080",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 14",
+        "geometry": "rect",
+        "x": 3.86,
+        "y": 3.64,
+        "width": 2.32,
+        "height": 0.46,
+        "paragraphs": [
+          {
+            "text": "测温湿度，数据线接 PA5",
+            "size": "900",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 15",
+        "geometry": "roundRect",
+        "x": 0.98,
+        "y": 4.22,
+        "width": 2.58,
+        "height": 0.9,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 16",
+        "geometry": "rect",
+        "x": 1.12,
+        "y": 4.32,
+        "width": 2.3,
+        "height": 0.32,
+        "paragraphs": [
+          {
+            "text": "0.96 寸 OLED",
+            "size": "1080",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 17",
+        "geometry": "rect",
+        "x": 1.12,
+        "y": 4.64,
+        "width": 2.32,
+        "height": 0.46,
+        "paragraphs": [
+          {
+            "text": "SSD1306 驱动，PB6 / PB7，显示时间与数据",
+            "size": "900",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 18",
+        "geometry": "roundRect",
+        "x": 3.72,
+        "y": 4.22,
+        "width": 2.58,
+        "height": 0.9,
+        "fill": "F6FCFA",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 19",
+        "geometry": "rect",
+        "x": 3.86,
+        "y": 4.32,
+        "width": 2.3,
+        "height": 0.32,
+        "paragraphs": [
+          {
+            "text": "JDY-31",
+            "size": "1080",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 20",
+        "geometry": "rect",
+        "x": 3.86,
+        "y": 4.64,
+        "width": 2.32,
+        "height": 0.46,
+        "paragraphs": [
+          {
+            "text": "SPP 蓝牙，9600波特率，PA2 / PA3",
+            "size": "900",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 21",
+        "geometry": "roundRect",
+        "x": 0.98,
+        "y": 5.22,
+        "width": 2.58,
+        "height": 0.9,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 22",
+        "geometry": "rect",
+        "x": 1.12,
+        "y": 5.32,
+        "width": 2.3,
+        "height": 0.32,
+        "paragraphs": [
+          {
+            "text": "HE-30A 雾化片",
+            "size": "1080",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 23",
+        "geometry": "rect",
+        "x": 1.12,
+        "y": 5.64,
+        "width": 2.32,
+        "height": 0.46,
+        "paragraphs": [
+          {
+            "text": "高频振动雾化水，控制接 PA7",
+            "size": "900",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 24",
+        "geometry": "roundRect",
+        "x": 3.72,
+        "y": 5.22,
+        "width": 2.58,
+        "height": 0.9,
+        "fill": "F6FCFA",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 25",
+        "geometry": "rect",
+        "x": 3.86,
+        "y": 5.32,
+        "width": 2.3,
+        "height": 0.32,
+        "paragraphs": [
+          {
+            "text": "有源蜂鸣器",
+            "size": "1080",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 26",
+        "geometry": "rect",
+        "x": 3.86,
+        "y": 5.64,
+        "width": 2.32,
+        "height": 0.46,
+        "paragraphs": [
+          {
+            "text": "定时结束与异常报警，接 PB10",
+            "size": "900",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 27",
+        "geometry": "roundRect",
+        "x": 6.95,
+        "y": 2.3,
+        "width": 5.73,
+        "height": 4.5,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 28",
+        "geometry": "roundRect",
+        "x": 6.95,
+        "y": 2.3,
+        "width": 5.73,
+        "height": 4.5,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 29",
+        "geometry": "rect",
+        "x": 7.23,
+        "y": 2.54,
+        "width": 5.17,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "工作闭环：采集 → 决策 → 执行",
+            "size": "1500",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 30",
+        "geometry": "roundRect",
+        "x": 7.28,
+        "y": 3.32,
+        "width": 2.72,
+        "height": 1.26,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 31",
+        "geometry": "rect",
+        "x": 8.13,
+        "y": 3.52,
+        "width": 1.7,
+        "height": 0.36,
+        "paragraphs": [
+          {
+            "text": "采集",
+            "size": "1300",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 32",
+        "geometry": "rect",
+        "x": 8.13,
+        "y": 3.92,
+        "width": 1.75,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "DHT11 温湿度",
+            "size": "1050",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 33",
+        "geometry": "rect",
+        "x": 9.88,
+        "y": 3.7,
+        "width": 0.35,
+        "height": 0.35,
+        "paragraphs": [
+          {
+            "text": "→",
+            "size": "1800",
+            "bold": "1",
+            "color": "E96F4A",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 34",
+        "geometry": "roundRect",
+        "x": 10.23,
+        "y": 3.32,
+        "width": 2.72,
+        "height": 1.26,
+        "fill": "F6FCFA",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 35",
+        "geometry": "rect",
+        "x": 11.08,
+        "y": 3.52,
+        "width": 1.7,
+        "height": 0.36,
+        "paragraphs": [
+          {
+            "text": "决策",
+            "size": "1300",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 36",
+        "geometry": "rect",
+        "x": 11.08,
+        "y": 3.92,
+        "width": 1.75,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "STM32 主控",
+            "size": "1050",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 37",
+        "geometry": "rect",
+        "x": 11.24,
+        "y": 4.629587707786527,
+        "width": 0.35,
+        "height": 0.35,
+        "paragraphs": [
+          {
+            "text": "↓",
+            "size": "1600",
+            "bold": "1",
+            "color": "E96F4A",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 38",
+        "geometry": "roundRect",
+        "x": 7.28,
+        "y": 4.87,
+        "width": 2.72,
+        "height": 1.26,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 39",
+        "geometry": "rect",
+        "x": 8.13,
+        "y": 5.07,
+        "width": 1.7,
+        "height": 0.36,
+        "paragraphs": [
+          {
+            "text": "控制",
+            "size": "1300",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 40",
+        "geometry": "rect",
+        "x": 8.13,
+        "y": 5.47,
+        "width": 1.75,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "JDY-31 + 手机蓝牙",
+            "size": "1050",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 41",
+        "geometry": "rect",
+        "x": 9.88,
+        "y": 5.25,
+        "width": 0.35,
+        "height": 0.35,
+        "paragraphs": [
+          {
+            "text": "→",
+            "size": "1800",
+            "bold": "1",
+            "color": "E96F4A",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 42",
+        "geometry": "roundRect",
+        "x": 10.23,
+        "y": 4.87,
+        "width": 2.72,
+        "height": 1.26,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 43",
+        "geometry": "rect",
+        "x": 11.08,
+        "y": 5.07,
+        "width": 1.7,
+        "height": 0.36,
+        "paragraphs": [
+          {
+            "text": "执行",
+            "size": "1300",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 44",
+        "geometry": "rect",
+        "x": 11.08,
+        "y": 5.47,
+        "width": 1.75,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "OLED / 雾化片 / 蜂鸣器",
+            "size": "1050",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 46",
+        "geometry": "rect",
+        "x": 0.65,
+        "y": 7.06,
+        "width": 9.2,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "林鸿烨 ｜ 基于 STM32 的蓝牙智能加湿器 · 毕业设计开题汇报",
+            "size": "850",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 47",
+        "geometry": "rect",
+        "x": 11.85,
+        "y": 7.06,
+        "width": 0.9,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "03 / 09",
+            "size": "900",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slide": 4,
+    "shapes": [
+      {
+        "name": "Shape 0",
+        "geometry": "roundRect",
+        "x": 0.63,
+        "y": 0.34,
+        "width": 0.56,
+        "height": 0.56,
+        "fill": "0E7C86",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 1",
+        "geometry": "rect",
+        "x": 0.63,
+        "y": 0.42,
+        "width": 0.56,
+        "height": 0.42,
+        "paragraphs": [
+          {
+            "text": "03",
+            "size": "1500",
+            "bold": "1",
+            "color": "FFFFFF",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 2",
+        "geometry": "rect",
+        "x": 1.42,
+        "y": 0.25,
+        "width": 8.6,
+        "height": 0.78,
+        "paragraphs": [
+          {
+            "text": "核心功能与控制逻辑",
+            "size": "2500",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 4",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 1.35,
+        "width": 3.88,
+        "height": 2.55,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 5",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 1.35,
+        "width": 3.88,
+        "height": 2.55,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 6",
+        "geometry": "roundRect",
+        "x": 0.93,
+        "y": 1.63,
+        "width": 0.56,
+        "height": 0.56,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 7",
+        "geometry": "rect",
+        "x": 1.65,
+        "y": 1.67,
+        "width": 2.58,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "时钟与状态显示",
+            "size": "1450",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 8",
+        "geometry": "rect",
+        "x": 0.93,
+        "y": 2.41,
+        "width": 3.32,
+        "height": 1.35,
+        "paragraphs": [
+          {
+            "text": "OLED 显示日期、时间、温湿度及模块状态，开机即可查看",
+            "size": "1150",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 9",
+        "geometry": "roundRect",
+        "x": 4.73,
+        "y": 1.35,
+        "width": 3.88,
+        "height": 2.55,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 10",
+        "geometry": "roundRect",
+        "x": 4.73,
+        "y": 1.35,
+        "width": 3.88,
+        "height": 2.55,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 11",
+        "geometry": "roundRect",
+        "x": 5.01,
+        "y": 1.63,
+        "width": 0.56,
+        "height": 0.56,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 12",
+        "geometry": "rect",
+        "x": 5.73,
+        "y": 1.67,
+        "width": 2.58,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "手机蓝牙控制",
+            "size": "1450",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 13",
+        "geometry": "rect",
+        "x": 5.01,
+        "y": 2.41,
+        "width": 3.32,
+        "height": 1.35,
+        "paragraphs": [
+          {
+            "text": "A / M 切换页面，O / S 手动启停，Z 进入自动模式",
+            "size": "1150",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 14",
+        "geometry": "roundRect",
+        "x": 8.81,
+        "y": 1.35,
+        "width": 3.88,
+        "height": 2.55,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 15",
+        "geometry": "roundRect",
+        "x": 8.81,
+        "y": 1.35,
+        "width": 3.88,
+        "height": 2.55,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 16",
+        "geometry": "roundRect",
+        "x": 9.09,
+        "y": 1.63,
+        "width": 0.56,
+        "height": 0.56,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 17",
+        "geometry": "rect",
+        "x": 9.81,
+        "y": 1.67,
+        "width": 2.58,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "定时加湿",
+            "size": "1450",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 18",
+        "geometry": "rect",
+        "x": 9.09,
+        "y": 2.41,
+        "width": 3.32,
+        "height": 1.35,
+        "paragraphs": [
+          {
+            "text": "手机发送 30s、5m 等定时命令，到点自动停止",
+            "size": "1150",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 19",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 4.15,
+        "width": 3.88,
+        "height": 2.55,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 20",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 4.15,
+        "width": 3.88,
+        "height": 2.55,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 21",
+        "geometry": "roundRect",
+        "x": 0.93,
+        "y": 4.43,
+        "width": 0.56,
+        "height": 0.56,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 22",
+        "geometry": "rect",
+        "x": 1.65,
+        "y": 4.47,
+        "width": 2.58,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "自动模式",
+            "size": "1450",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 23",
+        "geometry": "rect",
+        "x": 0.93,
+        "y": 5.21,
+        "width": 3.32,
+        "height": 1.35,
+        "paragraphs": [
+          {
+            "text": "按环境湿度自动选择持续、间歇或停止加湿",
+            "size": "1150",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 24",
+        "geometry": "roundRect",
+        "x": 4.73,
+        "y": 4.15,
+        "width": 3.88,
+        "height": 2.55,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 25",
+        "geometry": "roundRect",
+        "x": 4.73,
+        "y": 4.15,
+        "width": 3.88,
+        "height": 2.55,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 26",
+        "geometry": "roundRect",
+        "x": 5.01,
+        "y": 4.43,
+        "width": 0.56,
+        "height": 0.56,
+        "fill": "FDE8DF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 27",
+        "geometry": "rect",
+        "x": 5.73,
+        "y": 4.47,
+        "width": 2.58,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "超时保护",
+            "size": "1450",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 28",
+        "geometry": "rect",
+        "x": 5.01,
+        "y": 5.21,
+        "width": 3.32,
+        "height": 1.35,
+        "paragraphs": [
+          {
+            "text": "连续加湿满 1 小时强制停止并蜂鸣报警，防止过热损坏",
+            "size": "1150",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 29",
+        "geometry": "roundRect",
+        "x": 8.81,
+        "y": 4.15,
+        "width": 3.88,
+        "height": 2.55,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 30",
+        "geometry": "roundRect",
+        "x": 8.81,
+        "y": 4.15,
+        "width": 3.88,
+        "height": 2.55,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 31",
+        "geometry": "roundRect",
+        "x": 9.09,
+        "y": 4.43,
+        "width": 0.56,
+        "height": 0.56,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 32",
+        "geometry": "rect",
+        "x": 9.81,
+        "y": 4.47,
+        "width": 2.58,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "提示与告警",
+            "size": "1450",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 33",
+        "geometry": "rect",
+        "x": 9.09,
+        "y": 5.21,
+        "width": 3.32,
+        "height": 1.35,
+        "paragraphs": [
+          {
+            "text": "蜂鸣器提示定时结束与异常状态，水位不足时可及时发现",
+            "size": "1150",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 34",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 5.72,
+        "width": 12.03,
+        "height": 1.05,
+        "fill": "F6FCFA",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 35",
+        "geometry": "rect",
+        "x": 0.95,
+        "y": 5.87,
+        "width": 2.4,
+        "height": 0.4,
+        "paragraphs": [
+          {
+            "text": "自动加湿判断",
+            "size": "1350",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 36",
+        "geometry": "roundRect",
+        "x": 3.65,
+        "y": 5.85,
+        "width": 2.85,
+        "height": 0.78,
+        "fill": "FDE8DF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 37",
+        "geometry": "rect",
+        "x": 3.83,
+        "y": 5.95,
+        "width": 2.55,
+        "height": 0.32,
+        "paragraphs": [
+          {
+            "text": "RH < 40%",
+            "size": "1150",
+            "bold": "1",
+            "color": "E96F4A",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 38",
+        "geometry": "rect",
+        "x": 3.83,
+        "y": 6.3,
+        "width": 2.55,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "持续加湿",
+            "size": "1000",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 39",
+        "geometry": "roundRect",
+        "x": 6.67,
+        "y": 5.85,
+        "width": 2.85,
+        "height": 0.78,
+        "fill": "FFF2DD",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 40",
+        "geometry": "rect",
+        "x": 6.85,
+        "y": 5.95,
+        "width": 2.55,
+        "height": 0.32,
+        "paragraphs": [
+          {
+            "text": "RH 40% ~ 70%",
+            "size": "1150",
+            "bold": "1",
+            "color": "B47A1E",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 41",
+        "geometry": "rect",
+        "x": 6.85,
+        "y": 6.3,
+        "width": 2.55,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "喷 1 秒 / 停 1 秒",
+            "size": "1000",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 42",
+        "geometry": "roundRect",
+        "x": 9.69,
+        "y": 5.85,
+        "width": 2.85,
+        "height": 0.78,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 43",
+        "geometry": "rect",
+        "x": 9.87,
+        "y": 5.95,
+        "width": 2.55,
+        "height": 0.32,
+        "paragraphs": [
+          {
+            "text": "RH > 70%",
+            "size": "1150",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 44",
+        "geometry": "rect",
+        "x": 9.87,
+        "y": 6.3,
+        "width": 2.55,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "停止加湿",
+            "size": "1000",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 45",
+        "geometry": "rect",
+        "x": 0.65,
+        "y": 7.06,
+        "width": 9.2,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "林鸿烨 ｜ 基于 STM32 的蓝牙智能加湿器 · 毕业设计开题汇报",
+            "size": "850",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 46",
+        "geometry": "rect",
+        "x": 11.85,
+        "y": 7.06,
+        "width": 0.9,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "04 / 09",
+            "size": "900",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slide": 5,
+    "shapes": [
+      {
+        "name": "Shape 0",
+        "geometry": "roundRect",
+        "x": 0.63,
+        "y": 0.34,
+        "width": 0.56,
+        "height": 0.56,
+        "fill": "0E7C86",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 1",
+        "geometry": "rect",
+        "x": 0.63,
+        "y": 0.42,
+        "width": 0.56,
+        "height": 0.42,
+        "paragraphs": [
+          {
+            "text": "04",
+            "size": "1500",
+            "bold": "1",
+            "color": "FFFFFF",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 2",
+        "geometry": "rect",
+        "x": 1.42,
+        "y": 0.25,
+        "width": 8.6,
+        "height": 0.78,
+        "paragraphs": [
+          {
+            "text": "研究方法与实施步骤",
+            "size": "2500",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 4",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 1.35,
+        "width": 5.98,
+        "height": 2.32,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 5",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 1.35,
+        "width": 5.98,
+        "height": 2.32,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 6",
+        "geometry": "roundRect",
+        "x": 0.95,
+        "y": 1.65,
+        "width": 0.58,
+        "height": 0.58,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 7",
+        "geometry": "rect",
+        "x": 1.69,
+        "y": 1.59,
+        "width": 1.6,
+        "height": 0.34,
+        "paragraphs": [
+          {
+            "text": "STEP 01-02",
+            "size": "950",
+            "bold": "1",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 8",
+        "geometry": "rect",
+        "x": 1.69,
+        "y": 1.91,
+        "width": 4.68,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "调研与方案设计",
+            "size": "1550",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 9",
+        "geometry": "rect",
+        "x": 0.95,
+        "y": 2.43,
+        "width": 5.38,
+        "height": 0.62,
+        "paragraphs": [
+          {
+            "text": "查阅 STM32、DHT11、OLED、JDY-31、HE-30A 资料与相关论文",
+            "size": "1100",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 10",
+        "geometry": "rect",
+        "x": 0.95,
+        "y": 3.07,
+        "width": 5.38,
+        "height": 0.55,
+        "paragraphs": [
+          {
+            "text": "明确自动加湿、蓝牙控制、定时、报警等功能，完成器件选型并画出系统框图",
+            "size": "1100",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 11",
+        "geometry": "roundRect",
+        "x": 6.85,
+        "y": 1.35,
+        "width": 5.98,
+        "height": 2.32,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 12",
+        "geometry": "roundRect",
+        "x": 6.85,
+        "y": 1.35,
+        "width": 5.98,
+        "height": 2.32,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 13",
+        "geometry": "roundRect",
+        "x": 7.15,
+        "y": 1.65,
+        "width": 0.58,
+        "height": 0.58,
+        "fill": "E0F4EF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 14",
+        "geometry": "rect",
+        "x": 7.89,
+        "y": 1.59,
+        "width": 1.6,
+        "height": 0.34,
+        "paragraphs": [
+          {
+            "text": "STEP 03-04",
+            "size": "950",
+            "bold": "1",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 15",
+        "geometry": "rect",
+        "x": 7.89,
+        "y": 1.91,
+        "width": 4.68,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "开发环境与分模块调试",
+            "size": "1550",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 16",
+        "geometry": "rect",
+        "x": 7.15,
+        "y": 2.43,
+        "width": 5.38,
+        "height": 0.62,
+        "paragraphs": [
+          {
+            "text": "Keil 建立工程，准备开发板、下载器与模块并完成基础接线",
+            "size": "1100",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 17",
+        "geometry": "rect",
+        "x": 7.15,
+        "y": 3.07,
+        "width": 5.38,
+        "height": 0.55,
+        "paragraphs": [
+          {
+            "text": "显示、温湿度、蓝牙、雾化片、蜂鸣器分别写测试程序，逐一确认可用",
+            "size": "1100",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 18",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 3.95,
+        "width": 5.98,
+        "height": 2.32,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 19",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 3.95,
+        "width": 5.98,
+        "height": 2.32,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 20",
+        "geometry": "roundRect",
+        "x": 0.95,
+        "y": 4.25,
+        "width": 0.58,
+        "height": 0.58,
+        "fill": "FFF2DD",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 21",
+        "geometry": "rect",
+        "x": 1.69,
+        "y": 4.19,
+        "width": 1.6,
+        "height": 0.34,
+        "paragraphs": [
+          {
+            "text": "STEP 05",
+            "size": "950",
+            "bold": "1",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 22",
+        "geometry": "rect",
+        "x": 1.69,
+        "y": 4.51,
+        "width": 4.68,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "系统集成与主程序",
+            "size": "1550",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 23",
+        "geometry": "rect",
+        "x": 0.95,
+        "y": 5.03,
+        "width": 5.38,
+        "height": 0.62,
+        "paragraphs": [
+          {
+            "text": "将各模块整理成独立库函数，再编写主程序",
+            "size": "1100",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 24",
+        "geometry": "rect",
+        "x": 0.95,
+        "y": 5.67,
+        "width": 5.38,
+        "height": 0.55,
+        "paragraphs": [
+          {
+            "text": "组合实现手机控制、定时加湿、自动模式和保护功能",
+            "size": "1100",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 25",
+        "geometry": "roundRect",
+        "x": 6.85,
+        "y": 3.95,
+        "width": 5.98,
+        "height": 2.32,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 26",
+        "geometry": "roundRect",
+        "x": 6.85,
+        "y": 3.95,
+        "width": 5.98,
+        "height": 2.32,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 27",
+        "geometry": "roundRect",
+        "x": 7.15,
+        "y": 4.25,
+        "width": 0.58,
+        "height": 0.58,
+        "fill": "FDE8DF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 28",
+        "geometry": "rect",
+        "x": 7.89,
+        "y": 4.19,
+        "width": 1.6,
+        "height": 0.34,
+        "paragraphs": [
+          {
+            "text": "STEP 06-07",
+            "size": "950",
+            "bold": "1",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 29",
+        "geometry": "rect",
+        "x": 7.89,
+        "y": 4.51,
+        "width": 4.68,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "测试、修复与 PCB 定型",
+            "size": "1550",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 30",
+        "geometry": "rect",
+        "x": 7.15,
+        "y": 5.03,
+        "width": 5.38,
+        "height": 0.62,
+        "paragraphs": [
+          {
+            "text": "逐项测试蓝牙连接、显示、定时、自动和保护，发现问题及时修复",
+            "size": "1100",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 31",
+        "geometry": "rect",
+        "x": 7.15,
+        "y": 5.67,
+        "width": 5.38,
+        "height": 0.55,
+        "paragraphs": [
+          {
+            "text": "面包板方案转 PCB：嘉立创画板、打样、焊接组装，再复测整机功能",
+            "size": "1100",
+            "color": "3F5E63",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 32",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 6.38,
+        "width": 12.03,
+        "height": 0.48,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 33",
+        "geometry": "rect",
+        "x": 0.9,
+        "y": 6.44,
+        "width": 11.6,
+        "height": 0.36,
+        "paragraphs": [
+          {
+            "text": "开发工具：Keil ｜ 手机蓝牙调试助手 ｜ 万用表 ｜ 嘉立创 EDA",
+            "size": "1150",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 34",
+        "geometry": "rect",
+        "x": 0.65,
+        "y": 7.06,
+        "width": 9.2,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "林鸿烨 ｜ 基于 STM32 的蓝牙智能加湿器 · 毕业设计开题汇报",
+            "size": "850",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 35",
+        "geometry": "rect",
+        "x": 11.85,
+        "y": 7.06,
+        "width": 0.9,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "05 / 09",
+            "size": "900",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slide": 6,
+    "shapes": [
+      {
+        "name": "Shape 0",
+        "geometry": "roundRect",
+        "x": 0.63,
+        "y": 0.34,
+        "width": 0.56,
+        "height": 0.56,
+        "fill": "0E7C86",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 1",
+        "geometry": "rect",
+        "x": 0.63,
+        "y": 0.42,
+        "width": 0.56,
+        "height": 0.42,
+        "paragraphs": [
+          {
+            "text": "05",
+            "size": "1500",
+            "bold": "1",
+            "color": "FFFFFF",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 2",
+        "geometry": "rect",
+        "x": 1.42,
+        "y": 0.25,
+        "width": 8.6,
+        "height": 0.78,
+        "paragraphs": [
+          {
+            "text": "关键难点与保障措施",
+            "size": "2500",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 4",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 1.42,
+        "width": 5.98,
+        "height": 0.78,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 5",
+        "geometry": "roundRect",
+        "x": 0.85,
+        "y": 1.58,
+        "width": 0.46,
+        "height": 0.46,
+        "fill": "FDE8DF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 6",
+        "geometry": "rect",
+        "x": 1.43,
+        "y": 1.52,
+        "width": 4.98,
+        "height": 0.32,
+        "paragraphs": [
+          {
+            "text": "DHT11 读取时序严格，稍有偏差就读数失败",
+            "size": "1150",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 7",
+        "geometry": "rect",
+        "x": 1.43,
+        "y": 1.85,
+        "width": 4.98,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "对策：读取加入超时判断，失败不会卡死程序",
+            "size": "1050",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 8",
+        "geometry": "roundRect",
+        "x": 6.85,
+        "y": 1.42,
+        "width": 5.98,
+        "height": 0.78,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 9",
+        "geometry": "roundRect",
+        "x": 7.05,
+        "y": 1.58,
+        "width": 0.46,
+        "height": 0.46,
+        "fill": "FDE8DF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 10",
+        "geometry": "rect",
+        "x": 7.63,
+        "y": 1.52,
+        "width": 4.98,
+        "height": 0.32,
+        "paragraphs": [
+          {
+            "text": "蓝牙接收与雾化片控制易互相干扰",
+            "size": "1150",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 11",
+        "geometry": "rect",
+        "x": 7.63,
+        "y": 1.85,
+        "width": 4.98,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "对策：蓝牙接收用中断方式，指令处理与主循环分离",
+            "size": "1050",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 12",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 2.36,
+        "width": 5.98,
+        "height": 0.78,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 13",
+        "geometry": "roundRect",
+        "x": 0.85,
+        "y": 2.52,
+        "width": 0.46,
+        "height": 0.46,
+        "fill": "FDE8DF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 14",
+        "geometry": "rect",
+        "x": 1.43,
+        "y": 2.46,
+        "width": 4.98,
+        "height": 0.32,
+        "paragraphs": [
+          {
+            "text": "定时、自动控制怕主程序卡顿而延后",
+            "size": "1150",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 15",
+        "geometry": "rect",
+        "x": 1.43,
+        "y": 2.79,
+        "width": 4.98,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "对策：用状态机实现定时与模式切换，避免长时间占用",
+            "size": "1050",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 16",
+        "geometry": "roundRect",
+        "x": 6.85,
+        "y": 2.36,
+        "width": 5.98,
+        "height": 0.78,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 17",
+        "geometry": "roundRect",
+        "x": 7.05,
+        "y": 2.52,
+        "width": 0.46,
+        "height": 0.46,
+        "fill": "FDE8DF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 18",
+        "geometry": "rect",
+        "x": 7.63,
+        "y": 2.46,
+        "width": 4.98,
+        "height": 0.32,
+        "paragraphs": [
+          {
+            "text": "加湿器长时间工作可能过热损坏",
+            "size": "1150",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 19",
+        "geometry": "rect",
+        "x": 7.63,
+        "y": 2.79,
+        "width": 4.98,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "对策：连续加湿满 1 小时强制停止并蜂鸣报警",
+            "size": "1050",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 20",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 3.3,
+        "width": 5.98,
+        "height": 0.78,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 21",
+        "geometry": "roundRect",
+        "x": 0.85,
+        "y": 3.46,
+        "width": 0.46,
+        "height": 0.46,
+        "fill": "FDE8DF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 22",
+        "geometry": "rect",
+        "x": 1.43,
+        "y": 3.4,
+        "width": 4.98,
+        "height": 0.32,
+        "paragraphs": [
+          {
+            "text": "多模块联调时错误难定位",
+            "size": "1150",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 23",
+        "geometry": "rect",
+        "x": 1.43,
+        "y": 3.73,
+        "width": 4.98,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "对策：每完成一个模块就烧录测试一次，改动随时记录",
+            "size": "1050",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 24",
+        "geometry": "roundRect",
+        "x": 6.85,
+        "y": 3.3,
+        "width": 5.98,
+        "height": 0.78,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 25",
+        "geometry": "roundRect",
+        "x": 7.05,
+        "y": 3.46,
+        "width": 0.46,
+        "height": 0.46,
+        "fill": "FDE8DF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 26",
+        "geometry": "rect",
+        "x": 7.63,
+        "y": 3.4,
+        "width": 4.98,
+        "height": 0.32,
+        "paragraphs": [
+          {
+            "text": "PCB 电压不稳或模块间干扰",
+            "size": "1150",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 27",
+        "geometry": "rect",
+        "x": 7.63,
+        "y": 3.73,
+        "width": 4.98,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "对策：提前研究布局走线，上电前用万用表逐点检查",
+            "size": "1050",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 28",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 6.28,
+        "width": 12.03,
+        "height": 0.56,
+        "fill": "F6FCFA",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 29",
+        "geometry": "rect",
+        "x": 1.44,
+        "y": 6.34,
+        "width": 11,
+        "height": 0.46,
+        "paragraphs": [
+          {
+            "text": "测试节奏：单模块 → 组合 → 整机；每改一次程序就烧录验证，出现的问题与解决办法随时记录。",
+            "size": "1150",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 30",
+        "geometry": "rect",
+        "x": 0.65,
+        "y": 7.06,
+        "width": 9.2,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "林鸿烨 ｜ 基于 STM32 的蓝牙智能加湿器 · 毕业设计开题汇报",
+            "size": "850",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 31",
+        "geometry": "rect",
+        "x": 11.85,
+        "y": 7.06,
+        "width": 0.9,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "06 / 09",
+            "size": "900",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slide": 7,
+    "shapes": [
+      {
+        "name": "Text 0",
+        "geometry": "rect",
+        "x": 1.15,
+        "y": 0.7,
+        "width": 1,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "06",
+            "size": "1400",
+            "bold": "1",
+            "color": "0E7C86",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 1",
+        "geometry": "rect",
+        "x": 1.75,
+        "y": 0.5,
+        "width": 9,
+        "height": 0.85,
+        "paragraphs": [
+          {
+            "text": "预期结果：完成一台能演示的样机",
+            "size": "2700",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 3",
+        "geometry": "roundRect",
+        "x": 0.7,
+        "y": 1.35,
+        "width": 4.9,
+        "height": 5.55,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 4",
+        "geometry": "rect",
+        "x": 1.05,
+        "y": 1.62,
+        "width": 4.2,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "做完的作品是",
+            "size": "1400",
+            "color": "0E7C86",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 5",
+        "geometry": "rect",
+        "x": 1.05,
+        "y": 2.15,
+        "width": 4.25,
+        "height": 1.3,
+        "paragraphs": [
+          {
+            "text": "一台 PCB 蓝牙智能加湿器样机",
+            "size": "2400",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 6",
+        "geometry": "rect",
+        "x": 1.05,
+        "y": 3.35,
+        "width": 4.15,
+        "height": 0.7,
+        "paragraphs": [
+          {
+            "text": "可稳定运行，能现场演示蓝牙控制、自动加湿、定时加湿与保护功能。",
+            "size": "1300",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 7",
+        "geometry": "roundRect",
+        "x": 1.05,
+        "y": 4.2,
+        "width": 4.15,
+        "height": 0.62,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 8",
+        "geometry": "rect",
+        "x": 1.25,
+        "y": 4.35,
+        "width": 3.8,
+        "height": 0.34,
+        "paragraphs": [
+          {
+            "text": "样机硬件：PCB 整机 + 模块化固件",
+            "size": "1100",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 9",
+        "geometry": "roundRect",
+        "x": 1.05,
+        "y": 4.88,
+        "width": 4.15,
+        "height": 0.62,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 10",
+        "geometry": "rect",
+        "x": 1.25,
+        "y": 5.03,
+        "width": 3.8,
+        "height": 0.34,
+        "paragraphs": [
+          {
+            "text": "软件成果：分模块库函数与主程序源码",
+            "size": "1100",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 11",
+        "geometry": "roundRect",
+        "x": 1.05,
+        "y": 5.56,
+        "width": 4.15,
+        "height": 0.62,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 12",
+        "geometry": "rect",
+        "x": 1.25,
+        "y": 5.71,
+        "width": 3.8,
+        "height": 0.34,
+        "paragraphs": [
+          {
+            "text": "过程记录：功能测试与调试问题记录",
+            "size": "1100",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 13",
+        "geometry": "roundRect",
+        "x": 1.05,
+        "y": 6.24,
+        "width": 4.15,
+        "height": 0.62,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 14",
+        "geometry": "rect",
+        "x": 1.25,
+        "y": 6.39,
+        "width": 3.8,
+        "height": 0.34,
+        "paragraphs": [
+          {
+            "text": "论文成果：毕业设计论文及答辩材料",
+            "size": "1100",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 15",
+        "geometry": "roundRect",
+        "x": 5.85,
+        "y": 1.35,
+        "width": 6.78,
+        "height": 5.55,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 16",
+        "geometry": "rect",
+        "x": 6.2,
+        "y": 1.62,
+        "width": 5.8,
+        "height": 0.45,
+        "paragraphs": [
+          {
+            "text": "样机应达到的验收标准",
+            "size": "1500",
+            "bold": "1",
+            "color": "0E7C86",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 17",
+        "geometry": "rect",
+        "x": 6.75,
+        "y": 2.25,
+        "width": 5.5,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "开机正常显示日期、时间与温湿度",
+            "size": "1250",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 18",
+        "geometry": "rect",
+        "x": 6.75,
+        "y": 2.93,
+        "width": 5.5,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "手机蓝牙可切换页面，执行手动开 / 停 / 自动模式",
+            "size": "1250",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 19",
+        "geometry": "rect",
+        "x": 6.75,
+        "y": 3.61,
+        "width": 5.5,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "30s、5m 等定时命令到点自动停止，并响一声提示",
+            "size": "1250",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 20",
+        "geometry": "rect",
+        "x": 6.75,
+        "y": 4.29,
+        "width": 5.5,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "自动模式按 <40%、40% ~ 70%、>70% 湿度区间正确切换",
+            "size": "1250",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 21",
+        "geometry": "rect",
+        "x": 6.75,
+        "y": 4.97,
+        "width": 5.5,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "连续加湿满 1 小时自动停止并报警",
+            "size": "1250",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 22",
+        "geometry": "rect",
+        "x": 6.75,
+        "y": 5.65,
+        "width": 5.5,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "面包板与 PCB 两个阶段均能完成功能复现",
+            "size": "1250",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slide": 8,
+    "shapes": [
+      {
+        "name": "Shape 0",
+        "geometry": "roundRect",
+        "x": 0.63,
+        "y": 0.34,
+        "width": 0.56,
+        "height": 0.56,
+        "fill": "0E7C86",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 1",
+        "geometry": "rect",
+        "x": 0.63,
+        "y": 0.42,
+        "width": 0.56,
+        "height": 0.42,
+        "paragraphs": [
+          {
+            "text": "07",
+            "size": "1500",
+            "bold": "1",
+            "color": "FFFFFF",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 2",
+        "geometry": "rect",
+        "x": 1.42,
+        "y": 0.25,
+        "width": 8.6,
+        "height": 0.78,
+        "paragraphs": [
+          {
+            "text": "研究进度安排",
+            "size": "2500",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 4",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 1.42,
+        "width": 12.03,
+        "height": 0.72,
+        "fill": "E3F5F1",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 5",
+        "geometry": "rect",
+        "x": 1.52,
+        "y": 1.5,
+        "width": 10.8,
+        "height": 0.58,
+        "paragraphs": [
+          {
+            "text": "当前进度：选题、任务书与开题报告已完成，下一阶段进入毕设作品设计与实现。",
+            "size": "1350",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 6",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 2.6,
+        "width": 3.86,
+        "height": 1.88,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 7",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 2.6,
+        "width": 3.86,
+        "height": 1.88,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 8",
+        "geometry": "roundRect",
+        "x": 0.95,
+        "y": 2.88,
+        "width": 0.4,
+        "height": 0.4,
+        "fill": "26A9A2",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 9",
+        "geometry": "rect",
+        "x": 0.95,
+        "y": 3.36,
+        "width": 3.26,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "选题与任务书",
+            "size": "1500",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 10",
+        "geometry": "rect",
+        "x": 0.95,
+        "y": 3.88,
+        "width": 3.26,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "2026.06.25-07.16",
+            "size": "1000",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 11",
+        "geometry": "rect",
+        "x": 1.49,
+        "y": 2.9,
+        "width": 2.6,
+        "height": 0.36,
+        "paragraphs": [
+          {
+            "text": "已完成",
+            "size": "1050",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 12",
+        "geometry": "rect",
+        "x": 0.95,
+        "y": 4.15,
+        "width": 3.26,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "确定题目，明确任务",
+            "size": "950",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 13",
+        "geometry": "roundRect",
+        "x": 4.73,
+        "y": 2.6,
+        "width": 3.86,
+        "height": 1.88,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 14",
+        "geometry": "roundRect",
+        "x": 4.73,
+        "y": 2.6,
+        "width": 3.86,
+        "height": 1.88,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 15",
+        "geometry": "roundRect",
+        "x": 5.03,
+        "y": 2.88,
+        "width": 0.4,
+        "height": 0.4,
+        "fill": "26A9A2",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 16",
+        "geometry": "rect",
+        "x": 5.03,
+        "y": 3.36,
+        "width": 3.26,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "开题报告",
+            "size": "1500",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 17",
+        "geometry": "rect",
+        "x": 5.03,
+        "y": 3.88,
+        "width": 3.26,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "2026.07.17-09.22",
+            "size": "1000",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 18",
+        "geometry": "rect",
+        "x": 5.57,
+        "y": 2.9,
+        "width": 2.6,
+        "height": 0.36,
+        "paragraphs": [
+          {
+            "text": "已完成",
+            "size": "1050",
+            "bold": "1",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 19",
+        "geometry": "rect",
+        "x": 5.03,
+        "y": 4.15,
+        "width": 3.26,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "方案论证与资料准备",
+            "size": "950",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 20",
+        "geometry": "roundRect",
+        "x": 8.81,
+        "y": 2.6,
+        "width": 3.86,
+        "height": 1.88,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 21",
+        "geometry": "roundRect",
+        "x": 8.81,
+        "y": 2.6,
+        "width": 3.86,
+        "height": 1.88,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 22",
+        "geometry": "roundRect",
+        "x": 9.11,
+        "y": 2.88,
+        "width": 0.4,
+        "height": 0.4,
+        "fill": "E96F4A",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 23",
+        "geometry": "rect",
+        "x": 9.11,
+        "y": 3.36,
+        "width": 3.26,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "作品设计与实现",
+            "size": "1500",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 24",
+        "geometry": "rect",
+        "x": 9.11,
+        "y": 3.88,
+        "width": 3.26,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "2026.09.24-10.19",
+            "size": "1000",
+            "bold": "1",
+            "color": "E96F4A",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 25",
+        "geometry": "rect",
+        "x": 9.65,
+        "y": 2.9,
+        "width": 2.6,
+        "height": 0.36,
+        "paragraphs": [
+          {
+            "text": "当前重点",
+            "size": "1050",
+            "bold": "1",
+            "color": "E96F4A",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 26",
+        "geometry": "rect",
+        "x": 9.11,
+        "y": 4.15,
+        "width": 3.26,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "开发、测试并完成 PCB 样机",
+            "size": "950",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 27",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 4.75,
+        "width": 3.86,
+        "height": 1.88,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 28",
+        "geometry": "roundRect",
+        "x": 0.65,
+        "y": 4.75,
+        "width": 3.86,
+        "height": 1.88,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 29",
+        "geometry": "roundRect",
+        "x": 0.95,
+        "y": 5.03,
+        "width": 0.4,
+        "height": 0.4,
+        "fill": "CFE7E2",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 30",
+        "geometry": "rect",
+        "x": 0.95,
+        "y": 5.51,
+        "width": 3.26,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "中期检查",
+            "size": "1500",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 31",
+        "geometry": "rect",
+        "x": 0.95,
+        "y": 6.03,
+        "width": 3.26,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "2026.10.20-11.01",
+            "size": "1000",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 32",
+        "geometry": "rect",
+        "x": 0.95,
+        "y": 6.3,
+        "width": 3.26,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "按进度提交中期材料",
+            "size": "950",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 33",
+        "geometry": "roundRect",
+        "x": 4.73,
+        "y": 4.75,
+        "width": 3.86,
+        "height": 1.88,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 34",
+        "geometry": "roundRect",
+        "x": 4.73,
+        "y": 4.75,
+        "width": 3.86,
+        "height": 1.88,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 35",
+        "geometry": "roundRect",
+        "x": 5.03,
+        "y": 5.03,
+        "width": 0.4,
+        "height": 0.4,
+        "fill": "CFE7E2",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 36",
+        "geometry": "rect",
+        "x": 5.03,
+        "y": 5.51,
+        "width": 3.26,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "论文撰写与送审",
+            "size": "1500",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 37",
+        "geometry": "rect",
+        "x": 5.03,
+        "y": 6.03,
+        "width": 3.26,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "2026.11.02-12.22",
+            "size": "1000",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 38",
+        "geometry": "rect",
+        "x": 5.03,
+        "y": 6.3,
+        "width": 3.26,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "论文撰写、评审、修改与送审",
+            "size": "950",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Shape 39",
+        "geometry": "roundRect",
+        "x": 8.81,
+        "y": 4.75,
+        "width": 3.86,
+        "height": 1.88,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 40",
+        "geometry": "roundRect",
+        "x": 8.81,
+        "y": 4.75,
+        "width": 3.86,
+        "height": 1.88,
+        "fill": "FFFFFF",
+        "paragraphs": []
+      },
+      {
+        "name": "Shape 41",
+        "geometry": "roundRect",
+        "x": 9.11,
+        "y": 5.03,
+        "width": 0.4,
+        "height": 0.4,
+        "fill": "CFE7E2",
+        "paragraphs": []
+      },
+      {
+        "name": "Text 42",
+        "geometry": "rect",
+        "x": 9.11,
+        "y": 5.51,
+        "width": 3.26,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "毕业答辩",
+            "size": "1500",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 43",
+        "geometry": "rect",
+        "x": 9.11,
+        "y": 6.03,
+        "width": 3.26,
+        "height": 0.5,
+        "paragraphs": [
+          {
+            "text": "2026.12.23",
+            "size": "1000",
+            "color": "09616B",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 44",
+        "geometry": "rect",
+        "x": 9.11,
+        "y": 6.3,
+        "width": 3.26,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "现场演示与答辩",
+            "size": "950",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 45",
+        "geometry": "rect",
+        "x": 0.65,
+        "y": 7.06,
+        "width": 9.2,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "林鸿烨 ｜ 基于 STM32 的蓝牙智能加湿器 · 毕业设计开题汇报",
+            "size": "850",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 46",
+        "geometry": "rect",
+        "x": 11.85,
+        "y": 7.06,
+        "width": 0.9,
+        "height": 0.3,
+        "paragraphs": [
+          {
+            "text": "08 / 09",
+            "size": "900",
+            "color": "5E7B80",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slide": 9,
+    "shapes": [
+      {
+        "name": "Text 0",
+        "geometry": "rect",
+        "x": 1,
+        "y": 2.35,
+        "width": 11.33,
+        "height": 1.35,
+        "paragraphs": [
+          {
+            "text": "谢谢聆听",
+            "size": "7600",
+            "bold": "1",
+            "color": "123B42",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      },
+      {
+        "name": "Text 1",
+        "geometry": "rect",
+        "x": 1,
+        "y": 4.15,
+        "width": 11.33,
+        "height": 0.55,
+        "paragraphs": [
+          {
+            "text": "恳请各位老师批评指正",
+            "size": "1800",
+            "color": "0E7C86",
+            "font": "Microsoft YaHei"
+          }
+        ]
+      }
+    ]
+  }
+]
