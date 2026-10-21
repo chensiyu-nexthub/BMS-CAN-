@@ -7,6 +7,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "bms_config.h"
 
 /**
  * @file    bms_soc.h
@@ -25,10 +26,10 @@ extern "C" {
 /* ================================================================
  *  配置参数 (根据实际电池包修改)
  * ================================================================ */
-#define SOC_NOMINAL_CAP_MAH     20000       /* 标称容量 mAh (20Ah) */
-#define SOC_CONNECTED_CELLS     9           /* 实际接入电芯数 */
-#define SOC_FULL_CELL_MV        4150        /* 满充单体电压 mV */
-#define SOC_EMPTY_CELL_MV       2800        /* 空电单体电压 mV */
+#define SOC_NOMINAL_CAP_MAH     BMS_NOMINAL_CAP_MAH
+#define SOC_CONNECTED_CELLS     BMS_CELL_COUNT
+#define SOC_FULL_CELL_MV        BMS_FULL_CELL_MV
+#define SOC_EMPTY_CELL_MV       BMS_EMPTY_CELL_MV
 #define SOC_FULL_CURRENT_MA     200         /* 充满判定电流阈值 mA
                                              * |I| < 此值 且 V ≥ FULL → 认为满充 */
 #define SOC_IDLE_CURRENT_MA     50          /* 静置判定电流阈值 mA */

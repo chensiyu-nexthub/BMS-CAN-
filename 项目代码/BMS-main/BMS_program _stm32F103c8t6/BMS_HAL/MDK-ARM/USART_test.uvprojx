@@ -895,6 +895,11 @@
           <GroupName>BSP</GroupName>
           <Files>
             <File>
+              <FileName>bms_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\bms_config.h</FilePath>
+            </File>
+            <File>
               <FileName>bq76940.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\BSP\bq76940.c</FilePath>

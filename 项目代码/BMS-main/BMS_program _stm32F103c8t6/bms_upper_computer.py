@@ -7,11 +7,10 @@ BMS 上位机 - BQ76940 电池管理系统
 """
 
 # ============================================================
-# ★ 有效电芯通道映射 (BQ76940 共15通道, 实际只接了9节)
-# ★ ok=1 的通道: 1,2,5,6,7,10,11,12,15
-# ★ 修改这个列表即可适配不同接法
+# 固件已按物理槽位映射并输出逻辑电芯1~9。
+# 上位机只使用逻辑编号, 不再处理15个硬件通道。
 # ============================================================
-VALID_CHANNELS = [1, 2, 5, 6, 7, 10, 11, 12, 15]
+VALID_CHANNELS = list(range(1, 10))
 NUM_CELLS = len(VALID_CHANNELS)   # 9
 
 import tkinter as tk
@@ -48,6 +47,7 @@ class BMSData:
         self.prot_uv = 0
         self.prot_oc = 0
         self.prot_ot = 0
+        self.data_fault = 0
         self.hw_ov = 0
         self.hw_uv = 0
         self.hw_scd = 0
@@ -385,13 +385,13 @@ class BMSUpperComputer:
         if arg in ("odd", "even", "off", "status"):
             self._send(f"bal {arg}")
             return
-        # 数字: 显示编号 1~9 → 真实通道号
+        # 数字: 逻辑电芯编号1~9
         try:
             idx = int(arg)
             if 1 <= idx <= NUM_CELLS:
-                ch = VALID_CHANNELS[idx - 1]
+                ch = idx
                 self._send(f"bal {ch}")
-                self._append_raw(f"[映射] Cell {idx} → 通道 {ch}\n")
+                self._append_raw(f"[映射] Cell {idx} → 逻辑电芯 {ch}\n")
             else:
                 self._append_raw(f"[ERR] 请输入 1~{NUM_CELLS} 或 odd/even/off/status\n")
         except ValueError:
@@ -579,6 +579,10 @@ class BMSUpperComputer:
             bms.prot_oc = int(m.group(3))
             bms.prot_ot = int(m.group(4))
 
+        m = re.search(r"DAT=(\d+)", text)
+        if m:
+            bms.data_fault = int(m.group(1))
+
         m = re.search(r"HW:\s*OV=(\d+)\s+UV=(\d+)\s+SCD=(\d+)\s+OCD=(\d+)", text)
         if m:
             bms.hw_ov = int(m.group(1))
@@ -745,6 +749,8 @@ class BMSUpperComputer:
             reasons.append("过流")
         if bms.prot_ot:
             reasons.append("过温")
+        if bms.data_fault:
+            reasons.append("采样失效")
         if bms.cell_diff() > 80:
             reasons.append("压差过大")
 

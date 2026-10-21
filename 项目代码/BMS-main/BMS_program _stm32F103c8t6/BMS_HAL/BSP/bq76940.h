@@ -7,6 +7,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "bms_config.h"
 
 /**
  * @file    bq76940.h
@@ -140,7 +141,8 @@ extern "C" {
 /* ================================================================
  *  电池配置
  * ================================================================ */
-#define CELL_COUNT      15      /* 15串电池 (BQ76940最大支持15串) */
+/* Logical cells exposed by the BMS data model. */
+#define CELL_COUNT      BMS_CELL_COUNT
 
 /* ================================================================
  *  BMS数据结构 - 存储BQ76940采集到的所有电池信息
@@ -153,7 +155,7 @@ extern "C" {
  *    int ADC_offset        -> adc_offset
  * ================================================================ */
 typedef struct {
-    int      cell_mv[CELL_COUNT];   /* 15节电池电压, 单位mV
+    int      cell_mv[CELL_COUNT];   /* 9节逻辑电芯电压, 单位mV
                                      * 对应原代码 Batteryval[0]~Batteryval[14] */
 
     int      cell_raw_mv[CELL_COUNT];  /* 本轮原始计算值(过滤前), 单位mV
@@ -166,12 +168,16 @@ typedef struct {
                                        /* 每节电芯累计无效次数(上电以来)
                                         * 用于观察某一路是否持续不稳定 */
 
+    uint16_t cell_invalid_streak[CELL_COUNT];
+                                       /* 连续无效采样次数, 有效样本清零 */
+
     float    temp_raw_degC;         /* 本轮原始计算温度(过滤前), 单位°C
                                      * 仅用于调试观察 */
     uint8_t  temp_valid;            /* 本轮温度数据是否有效: 1=有效 0=无效 */
     uint16_t temp_invalid_cnt;      /* 温度累计无效次数(上电以来) */
+    uint16_t temp_invalid_streak;  /* 温度连续无效采样次数 */
                                      
-    int      pack_mv;               /* 总电压 (15节之和), 单位mV
+    int      pack_mv;               /* 总电压 (9节逻辑电芯之和), 单位mV
                                      * 对应原代码 Batteryval[15] */
     uint8_t  soc_percent;           /* SOC百分比(0~100)
                                      * 对应原BSP Batteryval[16] */
@@ -192,8 +198,8 @@ typedef struct {
                                      * 对应原代码 DSG_STA */
     
     uint16_t balance_mask;          /* 当前均衡位图
-                                     * bit0=单体1 ... bit14=单体15
-                                     * 0=不均衡, 1=正在均衡
+                                     * 硬件CELLBAL位图, bit0=VC1 ... bit14=VC15
+                                     * 仅BMS_ACTIVE_BALANCE_MASK中的位有效
                                      * 对应原BSP未完成的均衡状态 */
 
     int      avg_cell_mv;            /* 已连接电芯平均电压 mV
@@ -221,7 +227,7 @@ typedef struct {
 void BQ76940_Init(void);
 
 /**
- * @brief  读取15节电池电压并计算总电压
+ * @brief  按有效通道映射读取9节电池电压并计算总电压
  * @note   对应原代码 Get_Battery1()~Get_Battery15() + Get_Update_ALL_Data()
  *         原代码用15个独立函数分别读取每节电压, 这里用一个循环替代
  *         电压计算公式: V(mV) = (raw_adc * adc_gain) / 1000 + adc_offset
@@ -273,6 +279,17 @@ void BQ76940_UpdateSOC(void);
 void BQ76940_SetBalance(uint16_t cell_mask);
 
 /**
+ * @brief  按逻辑电芯位图设置均衡, bit0=cell1 ... bit8=cell9
+ * @note   内部转换为9串对应的硬件CELLBAL位
+ */
+void BQ76940_SetBalanceLogical(uint16_t logical_mask);
+
+/**
+ * @brief  以逻辑9串位图读取当前均衡状态
+ */
+uint16_t BQ76940_GetBalanceMaskLogical(void);
+
+/**
  * @brief  关闭所有均衡通道
  * @note   等效于 BQ76940_SetBalance(0x0000)
  *         初始化和保护触发时应调用此函数
@@ -289,7 +306,7 @@ uint16_t BQ76940_GetBalanceMask(void);
  * @brief  通过串口打印所有电池数据 (可读文本格式)
  * @param  huart: HAL库UART句柄指针, 例如 &huart1
  * @note   使用 HAL_UART_Transmit() 发送格式化字符串
- *         输出内容: 15节电压、总电压、温度、电流、ADC校准参数
+ *         输出内容: 9节逻辑电压、总电压、温度、电流、ADC校准参数
  */
 void BQ76940_PrintData(UART_HandleTypeDef *huart);
 
@@ -303,24 +320,17 @@ void BQ76940_PrintData(UART_HandleTypeDef *huart);
  * 对应原代码 main.c 中的硬编码阈值
  * 后续可改为从Flash读取, 目前先用宏定义
  * ====================================================== */
-#define BQ_OV_THRESHOLD         4200    /* 过压阈值 mV (原代码4200)
-                                         * 任一电芯超过此值 -> 关充电 */
-#define BQ_OV_RECOVER           4100    /* 过压恢复阈值 mV (原代码4100)
-                                         * 全部电芯低于此值 -> 恢复充电 */
-#define BQ_UV_THRESHOLD         2800    /* 欠压阈值 mV (原代码2800)
-                                         * 任一电芯低于此值 -> 关放电 */
-#define BQ_UV_RECOVER           3000    /* 欠压恢复阈值 mV (加200mV回差防抖)
-                                         * 全部电芯高于此值 -> 恢复放电 */
-#define BQ_OC_THRESHOLD         5000    /* 过流阈值 mA (原代码5000)
-                                         * 电流超过此值 -> 关全部MOS */
-#define BQ_OC_RECOVER           4500    /* 过流恢复阈值 mA (加500mA回差防抖) */
-#define BQ_OT_THRESHOLD         60      /* 过温阈值 °C (原代码从Flash读, 默认60)
-                                         * 温度超过此值 -> 关全部MOS */
-#define BQ_OT_RECOVER           55      /* 过温恢复阈值 °C (加5°C回差防抖) */
-#define BQ_LT_THRESHOLD         0       /* 低温充电阈值 °C
-                                         * 温度低于此值 -> 禁止充电(关CHG MOS)
-                                         * 锂电池0°C以下充电会析锂, 损害电池 */
-#define BQ_LT_RECOVER           5       /* 低温充电恢复阈值 °C (加5°C回差防抖) */
+/* Keep the existing software protection values, sourced from bms_config.h. */
+#define BQ_OV_THRESHOLD         BMS_OV_TRIP_MV
+#define BQ_OV_RECOVER           BMS_OV_RECOVER_MV
+#define BQ_UV_THRESHOLD         BMS_UV_TRIP_MV
+#define BQ_UV_RECOVER           BMS_UV_RECOVER_MV
+#define BQ_OC_THRESHOLD         BMS_OC_TRIP_MA
+#define BQ_OC_RECOVER           BMS_OC_RECOVER_MA
+#define BQ_OT_THRESHOLD         BMS_OT_TRIP_C
+#define BQ_OT_RECOVER           BMS_OT_RECOVER_C
+#define BQ_LT_THRESHOLD         BMS_LT_TRIP_C
+#define BQ_LT_RECOVER           BMS_LT_RECOVER_C
 
 /* ==================== 数据有效性过滤(电芯电压) ====================
  * 作用:
@@ -371,6 +381,7 @@ typedef struct {
                              * 对应原代码 Temp_up_flag */
     uint8_t  lt_flag;       /* 低温充电保护已触发: 1=是 0=否
                              * 0°C以下禁止充电, 5°C以上恢复 */
+    uint8_t  data_fault;    /* 连续采样无效导致的失效安全锁存 */
 
     /* 硬件报警标志 (来自SYS_STAT寄存器) */
     uint8_t  hw_ov;         /* 芯片硬件过压报警

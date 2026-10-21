@@ -257,30 +257,30 @@ static void BMS_ParseCmd(const char *line)
             snprintf(reply, sizeof(reply), "[CMD] Balance OFF\r\n");
 
         } else if (strcmp(arg, "odd") == 0) {
-            /* 奇数单体: bit0,2,4,6,8,10,12,14 = 0x5555 */
-            BQ76940_SetBalance(0x5555);
+            /* Logical cells 1,3,5,7,9: bit0,2,4,6,8 = 0x0155 */
+            BQ76940_SetBalanceLogical(0x0155);
             snprintf(reply, sizeof(reply), "[CMD] Balance ODD cells\r\n");
 
         } else if (strcmp(arg, "even") == 0) {
-            /* 偶数单体: bit1,3,5,7,9,11,13 = 0x2AAA */
-            BQ76940_SetBalance(0x2AAA);
+            /* Logical cells 2,4,6,8: bit1,3,5,7 = 0x00AA */
+            BQ76940_SetBalanceLogical(0x00AA);
             snprintf(reply, sizeof(reply), "[CMD] Balance EVEN cells\r\n");
 
         } else if (strcmp(arg, "status") == 0) {
-            mask = BQ76940_GetBalanceMask();
+            mask = BQ76940_GetBalanceMaskLogical();
             snprintf(reply, sizeof(reply), "[CMD] Balance mask = 0x%04X\r\n", mask);
 
         } else if (strncmp(arg, "mask ", 5) == 0) {
-            /* bal mask 0x1234  - 直接设置均衡掩码 */
+            /* bal mask 0x0155 - set logical 9-cell balancing mask */
             uint16_t m = (uint16_t)strtol(arg + 5, NULL, 0);
-            BQ76940_SetBalance(m);
+            BQ76940_SetBalanceLogical(m);
             snprintf(reply, sizeof(reply), "[CMD] Balance mask set 0x%04X\r\n", m);
 
         } else {
-            /* 尝试解析单体编号 1~15 */
+            /* Parse logical cell number 1~9. */
             int cell = atoi(arg);
-            if (cell >= 1 && cell <= 15) {
-                BQ76940_SetBalance((uint16_t)(1u << (cell - 1)));
+            if (cell >= 1 && cell <= BMS_CELL_COUNT) {
+                BQ76940_SetBalanceLogical((uint16_t)(1u << (cell - 1)));
                 snprintf(reply, sizeof(reply), "[CMD] Balance cell %d ON\r\n", cell);
             } else {
                 snprintf(reply, sizeof(reply), "[ERR] Unknown bal arg: %s\r\n", arg);
