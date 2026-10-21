@@ -15,12 +15,13 @@ extern "C" {
  *
  *  算法概述:
  *    1) 库仑积分:  ΔmAh = -I_mA * Δt / 3600000   (正放负充)
- *    2) OCV校准:   静置 30s 后用电压查表渐进修正 10%
- *    3) 满充校准:   V≥4150mV 且 |I|<200mA → SOC=100%
- *    4) 容量学习:   空电→满充 记录实际Ah, EMA更新 full_cap
- *    5) SOH:       learned_cap / nominal_cap × 100
- *    6) 循环计数:   累积充电量 ≥ nominal_cap 则 +1 循环
- *    7) Flash保存:  每60s检查, 变化≥1% full_cap 才写入(减少擦写)
+ *    2) OCV校准:   全部单体有效且压差≤50mV, 静置30s后修正
+ *    3) 满充校准:   最高单体≥4150mV且|I|<200mA → SOC=100%
+ *    4) 空电检测:   最低单体≤2800mV → SOC=0%
+ *    5) 容量学习:   空电→满充 记录实际Ah, EMA更新 full_cap
+ *    6) SOH:       learned_cap / nominal_cap × 100
+ *    7) 循环计数:   累积充电量 ≥ nominal_cap 则 +1 循环
+ *    8) Flash保存:  每60s检查, 变化≥1% full_cap 才写入(减少擦写)
  */
 
 /* ================================================================
@@ -34,10 +35,12 @@ extern "C" {
                                              * |I| < 此值 且 V ≥ FULL → 认为满充 */
 #define SOC_IDLE_CURRENT_MA     50          /* 静置判定电流阈值 mA */
 #define SOC_IDLE_TIME_MS        30000       /* 静置时间后做OCV校准 (30s) */
+#define SOC_OCV_MAX_CELL_DELTA_MV 50        /* OCV校准允许的最大单体压差 */
 #define SOC_SAMPLE_PERIOD_MS    500         /* 主循环采样周期 ms */
 
 /* ---- Flash持久化 ---- */
 #define SOC_FLASH_SAVE_INTERVAL_S  60       /* Flash检查保存间隔 s */
+#define SOC_FLASH_PAGE_SIZE       1024u    /* STM32F103C8 每页 1KB */
 #define SOC_FLASH_ADDR          0x0800FC00  /* 存储页地址
                                              * STM32F103C8 最后 1KB 页 */
 #define SOC_FLASH_MAGIC         0x534F4321  /* 魔数 "SOC!" */
@@ -83,13 +86,16 @@ void SOC_Init(void);
 /**
  * @brief  SOC主更新, 每个采样周期调用一次
  * @param  current_mA  当前电流 (正=放电, 负=充电)
- * @param  pack_mv     总包电压 mV
  * @param  avg_cell_mv 已连接电芯平均电压 mV
+ * @param  max_cell_mv 最高有效单体电压 mV
+ * @param  min_cell_mv 最低有效单体电压 mV
+ * @param  calibration_valid 1=电压/温度有效且无数据故障, 0=禁止电压校准
  * @param  chg_on      充电MOS状态 (1=开)
  * @param  dt_ms       距上次调用的时间间隔 ms
  */
-void SOC_Update(int current_mA, int pack_mv, int avg_cell_mv,
-                uint8_t chg_on, uint32_t dt_ms);
+void SOC_Update(int current_mA, int avg_cell_mv,
+                int max_cell_mv, int min_cell_mv,
+                uint8_t calibration_valid, uint8_t chg_on, uint32_t dt_ms);
 
 /**
  * @brief  立即将SOC数据写入Flash

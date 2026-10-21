@@ -41,6 +41,13 @@ static volatile uint8_t s_cmd_ready = 0;       /* 1=有一行待解析 */
 static SemaphoreHandle_t xUartTxDone = NULL;
 /* ==================================================== */
 
+#define UART_DMA_TX_BUFFER_SIZE  128u
+#define UART_DMA_TX_TIMEOUT_MS   500u
+
+/* DMA must never read a caller stack buffer after UART_DMA_Send returns. */
+static uint8_t s_uart_tx_buf[UART_DMA_TX_BUFFER_SIZE];
+static volatile uint8_t s_uart_tx_fault = 0;
+
 static void BMS_ParseCmd(const char *line);    /* 前向声明 */
 /* USER CODE END 0 */
 
@@ -199,6 +206,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
  *============================================================*/
 void UART_DMA_Init(void)
 {
+    s_uart_tx_fault = 0;
     xUartTxDone = xSemaphoreCreateBinary();
 }
 
@@ -209,9 +217,47 @@ void UART_DMA_Init(void)
  *============================================================*/
 void UART_DMA_Send(const uint8_t *data, uint16_t len)
 {
-    if (len == 0 || data == NULL) return;
-    HAL_UART_Transmit_DMA(&huart1, (uint8_t *)data, len);
-    xSemaphoreTake(xUartTxDone, pdMS_TO_TICKS(200));  /* 等待DMA完成, 最多200ms */
+    if (data == NULL || len == 0 || len > UART_DMA_TX_BUFFER_SIZE ||
+        xUartTxDone == NULL)
+        return;
+
+    /* A previous timeout may have left the peripheral busy. Abort it before reuse. */
+    if (s_uart_tx_fault || huart1.gState != HAL_UART_STATE_READY ||
+        hdma_usart1_tx.State != HAL_DMA_STATE_READY)
+    {
+        (void)HAL_UART_AbortTransmit(&huart1);
+        while (xSemaphoreTake(xUartTxDone, 0) == pdTRUE)
+        {
+        }
+
+        if (huart1.gState != HAL_UART_STATE_READY ||
+            hdma_usart1_tx.State != HAL_DMA_STATE_READY)
+        {
+            s_uart_tx_fault = 1;
+            return;
+        }
+        s_uart_tx_fault = 0;
+    }
+
+    memcpy(s_uart_tx_buf, data, len);
+    if (HAL_UART_Transmit_DMA(&huart1, s_uart_tx_buf, len) != HAL_OK)
+        return;
+
+    if (xSemaphoreTake(xUartTxDone, pdMS_TO_TICKS(UART_DMA_TX_TIMEOUT_MS)) != pdTRUE)
+    {
+        /* Keep the static buffer untouched until DMA is definitely stopped. */
+        if (HAL_UART_AbortTransmit(&huart1) != HAL_OK ||
+            huart1.gState != HAL_UART_STATE_READY ||
+            hdma_usart1_tx.State != HAL_DMA_STATE_READY)
+        {
+            s_uart_tx_fault = 1;
+            return;
+        }
+
+        while (xSemaphoreTake(xUartTxDone, 0) == pdTRUE)
+        {
+        }
+    }
 }
 
 /*============================================================
@@ -221,6 +267,8 @@ void UART_DMA_Send(const uint8_t *data, uint16_t len)
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
     if (huart->Instance == USART1) {
+        if (xUartTxDone == NULL)
+            return;
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
         xSemaphoreGiveFromISR(xUartTxDone, &xHigherPriorityTaskWoken);
         portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
@@ -290,7 +338,10 @@ static void BMS_ParseCmd(const char *line)
     /* ---------- chg 系列 ---------- */
     } else if (strcmp(line, "chg on") == 0) {
         BQ76940_OpenCHG();
-        snprintf(reply, sizeof(reply), "[CMD] CHG MOS ON\r\n");
+        BQ76940_ReadAlerts();
+        BQ76940_ProtectionCheck();
+        snprintf(reply, sizeof(reply), "[CMD] CHG request ON, actual=%s\r\n",
+                 bms_data.chg_on ? "ON" : "OFF");
 
     } else if (strcmp(line, "chg off") == 0) {
         BQ76940_CloseCHG();
@@ -299,7 +350,10 @@ static void BMS_ParseCmd(const char *line)
     /* ---------- dsg 系列 ---------- */
     } else if (strcmp(line, "dsg on") == 0) {
         BQ76940_OpenDSG();
-        snprintf(reply, sizeof(reply), "[CMD] DSG MOS ON\r\n");
+        BQ76940_ReadAlerts();
+        BQ76940_ProtectionCheck();
+        snprintf(reply, sizeof(reply), "[CMD] DSG request ON, actual=%s\r\n",
+                 bms_data.dsg_on ? "ON" : "OFF");
 
     } else if (strcmp(line, "dsg off") == 0) {
         BQ76940_CloseDSG();
@@ -308,7 +362,11 @@ static void BMS_ParseCmd(const char *line)
     /* ---------- mos 系列 ---------- */
     } else if (strcmp(line, "mos on") == 0) {
         BQ76940_OpenAll();
-        snprintf(reply, sizeof(reply), "[CMD] CHG+DSG MOS ALL ON\r\n");
+        BQ76940_ReadAlerts();
+        BQ76940_ProtectionCheck();
+        snprintf(reply, sizeof(reply), "[CMD] MOS request ON, CHG=%s DSG=%s\r\n",
+                 bms_data.chg_on ? "ON" : "OFF",
+                 bms_data.dsg_on ? "ON" : "OFF");
 
     } else if (strcmp(line, "mos off") == 0) {
         BQ76940_CloseAll();

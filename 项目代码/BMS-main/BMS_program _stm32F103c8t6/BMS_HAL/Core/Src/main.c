@@ -44,6 +44,10 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
+#define WDG_CHECK_INTERVAL_MS       100u
+#define BMS_HEARTBEAT_TIMEOUT_MS   1500u
+#define UART_HEARTBEAT_TIMEOUT_MS   500u
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -58,6 +62,10 @@
 static TaskHandle_t      xBmsTaskHandle  = NULL;   /* BMS采集/保护任务 */
 static TaskHandle_t      xUartTaskHandle = NULL;   /* 串口命令处理任务 */
 SemaphoreHandle_t        xI2CMutex       = NULL;   /* I2C总线互斥量 (全局, usart.c也可能用到) */
+
+/* 32-bit aligned counters are atomically readable on Cortex-M3. */
+static volatile uint32_t s_bms_heartbeat = 0;
+static volatile uint32_t s_uart_heartbeat = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -91,6 +99,13 @@ static void BMS_Task(void *pvParameters)
 
         xSemaphoreTake(xI2CMutex, portMAX_DELAY);
 
+        /* 每一轮都推进时间基准; 通信失败后不能把整段停机时间补进SOC. */
+        TickType_t xNow = xTaskGetTickCount();
+        uint32_t dt_ms = (uint32_t)(xNow - xLastWakeTime);
+        xLastWakeTime = xNow;
+        if (dt_ms > BMS_SOC_MAX_DT_MS)
+            dt_ms = BMS_SOC_MAX_DT_MS;
+
         /* ALERT 中断触发 → 立即读硬件报警 + 保护检查 */
         if (g_bq_alert_flag) {
             g_bq_alert_flag = 0;
@@ -101,29 +116,54 @@ static void BMS_Task(void *pvParameters)
         /* 周期性通信检查 + 数据更新 */
         if (BQ76940_CommCheck()) {
             BQ76940_UpdateAll();
-            BQ76940_ProtectionCheck();
             BQ76940_ReadAlerts();
+            BQ76940_ProtectionCheck();
 
             /* SOC库仑计更新 — 每次采集后调用 */
             {
                 int avg_cell_mv = bms_data.avg_cell_mv;  /* 由UpdateAll()动态计算 */
-                TickType_t xNow = xTaskGetTickCount();
-                uint32_t dt_ms = (uint32_t)(xNow - xLastWakeTime);
-                xLastWakeTime = xNow;
+                int max_cell_mv = 0;
+                int min_cell_mv = 0;
+                uint8_t valid_cell_count = 0;
 
-                SOC_Update(bms_data.current_mA,
-                           bms_data.pack_mv,
-                           avg_cell_mv,
-                           bms_data.chg_on,
-                           dt_ms);
+                for (int i = 0; i < CELL_COUNT; i++)
+                {
+                    if (!bms_data.cell_valid[i] || bms_data.cell_mv[i] <= 1000)
+                        continue;
 
-                /* 同步SOC百分比到bms_data (供串口status命令显示) */
-                SOC_State_t *soc = SOC_GetState();
-                bms_data.soc_percent = soc->soc_percent;
+                    if (valid_cell_count == 0 || bms_data.cell_mv[i] > max_cell_mv)
+                        max_cell_mv = bms_data.cell_mv[i];
+                    if (valid_cell_count == 0 || bms_data.cell_mv[i] < min_cell_mv)
+                        min_cell_mv = bms_data.cell_mv[i];
+                    valid_cell_count++;
+                }
+
+                BQ76940_Protection_t protection;
+                BQ76940_ProtectionGet(&protection);
+                uint8_t calibration_valid =
+                    (valid_cell_count == CELL_COUNT && bms_data.temp_valid &&
+                     !protection.data_fault) ? 1 : 0;
+
+                /* 电流通信失败时停止库仑积分, 防止用旧电流补算整段间隔. */
+                if (bms_data.current_valid)
+                {
+                    SOC_Update(bms_data.current_mA,
+                               avg_cell_mv,
+                               max_cell_mv,
+                               min_cell_mv,
+                               calibration_valid,
+                               bms_data.chg_on,
+                               dt_ms);
+
+                    /* 同步SOC百分比到bms_data (供串口status命令显示) */
+                    SOC_State_t *soc = SOC_GetState();
+                    bms_data.soc_percent = soc->soc_percent;
+                }
             }
         }
 
         xSemaphoreGive(xI2CMutex);
+        s_bms_heartbeat++;
     }
 }
 
@@ -148,6 +188,7 @@ static void UART_Task(void *pvParameters)
 
         /* 50ms轮询, CLI响应足够灵敏 */
         vTaskDelay(pdMS_TO_TICKS(50));
+        s_uart_heartbeat++;
     }
 }
 
@@ -272,12 +313,63 @@ void SystemClock_Config(void)
  *  vApplicationIdleHook — FreeRTOS空闲钩子
  *  当CPU无其他任务可调度时自动调用
  *  职责:
- *    1. 喂IWDG看门狗 — 任何任务死循环卡死将导致Idle不执行→看门狗复位
+ *    1. 检查BMS/UART心跳, 两者按时推进才刷新IWDG
+ *       任一任务死循环、返回或卡死超过时限都会停止喂狗并复位
  *    2. WFI省电 — 等待中断唤醒, 降低CPU功耗
  *============================================================================*/
 void vApplicationIdleHook(void)
 {
-    HAL_IWDG_Refresh(&hiwdg);
+    static uint8_t initialized = 0;
+    static uint32_t last_check_tick = 0;
+    static uint32_t last_bms_heartbeat = 0;
+    static uint32_t last_uart_heartbeat = 0;
+    static uint32_t last_bms_change_tick = 0;
+    static uint32_t last_uart_change_tick = 0;
+
+    uint32_t now = HAL_GetTick();
+
+    if (!initialized)
+    {
+        initialized = 1;
+        last_check_tick = now;
+        last_bms_heartbeat = s_bms_heartbeat;
+        last_uart_heartbeat = s_uart_heartbeat;
+        last_bms_change_tick = now;
+        last_uart_change_tick = now;
+        __WFI();
+        return;
+    }
+
+    if ((uint32_t)(now - last_check_tick) < WDG_CHECK_INTERVAL_MS)
+    {
+        __WFI();
+        return;
+    }
+    last_check_tick = now;
+
+    uint32_t bms_heartbeat = s_bms_heartbeat;
+    uint32_t uart_heartbeat = s_uart_heartbeat;
+
+    if (bms_heartbeat != last_bms_heartbeat)
+    {
+        last_bms_heartbeat = bms_heartbeat;
+        last_bms_change_tick = now;
+    }
+
+    if (uart_heartbeat != last_uart_heartbeat)
+    {
+        last_uart_heartbeat = uart_heartbeat;
+        last_uart_change_tick = now;
+    }
+
+    uint8_t bms_alive =
+        (uint32_t)(now - last_bms_change_tick) <= BMS_HEARTBEAT_TIMEOUT_MS;
+    uint8_t uart_alive =
+        (uint32_t)(now - last_uart_change_tick) <= UART_HEARTBEAT_TIMEOUT_MS;
+
+    if (bms_alive && uart_alive)
+        HAL_IWDG_Refresh(&hiwdg);
+
     __WFI();
 }
 

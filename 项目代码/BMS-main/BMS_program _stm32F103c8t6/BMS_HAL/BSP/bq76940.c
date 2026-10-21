@@ -36,6 +36,13 @@
 /* 全局BMS数据结构 */
 BQ76940_Data_t bms_data;
 
+/* Last MOS state applied by the arbitrator and manual override intents. */
+static uint8_t s_mos_state_valid = 0;
+static uint8_t s_applied_chg = 0;
+static uint8_t s_applied_dsg = 0;
+static uint8_t s_manual_chg_off = 0;
+static uint8_t s_manual_dsg_off = 0;
+
 /* Logical cell index -> BQ76940 VC register slot. */
 static const uint8_t s_active_cell_slots[BMS_ACTIVE_CELL_MAP_COUNT] =
     BMS_ACTIVE_CELL_MAP_INIT;
@@ -110,7 +117,7 @@ void BQ76940_AlertCallback(void)
 
 /**
  * @brief  HAL GPIO EXTI回调 (覆盖 __weak 版本)
- *         PB2 下降沿 →BQ76940 ALERT触发
+ *         PB2 上升沿 →BQ76940 ALERT触发
  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
@@ -135,6 +142,16 @@ static int BQ_ReadRegs(uint8_t start_reg, uint8_t *buf, uint8_t len);
 static int BQ_SetBalanceChecked(uint16_t cell_mask);
 static void BQ_CellFilterReset(uint8_t idx, int seed_mv);
 static void BQ_TempFilterReset(float seed_temp);
+static void BQ_CurrentFilterReset(void);
+static void BQ_ForceMosOff(void);
+static void BQ_ApplyDesiredMosState(void);
+
+/* Raw fail-safe shutdown used by communication recovery and init failures. */
+static void BQ_ForceMosOff(void)
+{
+    BQ_WriteReg(REG_SYS_CTRL2, 0x40); /* CC_EN=1, CHG=0, DSG=0 */
+    s_mos_state_valid = 0;
+}
 
 static void BQ76940_CommRecord(uint8_t ok)
 {
@@ -199,7 +216,7 @@ uint8_t BQ76940_CommCheck(void)
     /* 达到阈值 检查是否允许重初始化(防止高频反复重启) */
     /* Communication is no longer trusted: force MOS off before retrying. */
     s_bq_initialized = 0;
-    BQ76940_CloseAll();
+    BQ_ForceMosOff();
     uint32_t now = HAL_GetTick();
     if ((now - g_bq_last_reinit_tick) < BQ_REINIT_MIN_INTERVAL)
     {
@@ -250,10 +267,14 @@ static void BQ_ReadMosStatus(void)
     {
         bms_data.dsg_on = 0;
         bms_data.chg_on = 0;
+        s_mos_state_valid = 0;
         return;
     }
     bms_data.dsg_on = (reg & 0x02) ? 1 : 0;
     bms_data.chg_on = (reg & 0x01) ? 1 : 0;
+    s_applied_dsg = bms_data.dsg_on;
+    s_applied_chg = bms_data.chg_on;
+    s_mos_state_valid = 1;
 }
 
 /**
@@ -263,16 +284,8 @@ static void BQ_ReadMosStatus(void)
  */
 void BQ76940_OpenCHG(void)
 {
-    BQ_WriteReg(REG_SYS_STAT, 0xFF);   /* 清除告警标志, 否则BQ76940拒绝开FET */
-    BQ_ReadMosStatus();
-    if (bms_data.dsg_on)
-    {
-        BQ_WriteReg(REG_SYS_CTRL2, 0x43); /* DSG=1 CHG=1 */
-    }
-    else
-    {
-        BQ_WriteReg(REG_SYS_CTRL2, 0x41); /* DSG=0 CHG=1 */
-    }
+    /* Only record intent; ProtectionCheck performs the actual output. */
+    s_manual_chg_off = 0;
 }
 
 /**
@@ -282,15 +295,10 @@ void BQ76940_OpenCHG(void)
  */
 void BQ76940_CloseCHG(void)
 {
-    BQ_ReadMosStatus();
-    if (bms_data.dsg_on)
-    {
-        BQ_WriteReg(REG_SYS_CTRL2, 0x42); /* DSG=1 CHG=0 */
-    }
-    else
-    {
-        BQ_WriteReg(REG_SYS_CTRL2, 0x40); /* DSG=0 CHG=0 */
-    }
+    /* Closing is fail-safe and takes effect immediately. */
+    s_mos_state_valid = 0;
+    s_manual_chg_off = 1;
+    BQ_ApplyDesiredMosState();
     /* 不再清均衡手动关CHG不应影响均衡, 保护清均衡在BQ_CheckXX*/
 }
 
@@ -301,16 +309,8 @@ void BQ76940_CloseCHG(void)
  */
 void BQ76940_OpenDSG(void)
 {
-    BQ_WriteReg(REG_SYS_STAT, 0xFF);   /* 清除告警标志, 否则BQ76940拒绝开FET */
-    BQ_ReadMosStatus();
-    if (bms_data.chg_on)
-    {
-        BQ_WriteReg(REG_SYS_CTRL2, 0x43); /* DSG=1 CHG=1 */
-    }
-    else
-    {
-        BQ_WriteReg(REG_SYS_CTRL2, 0x42); /* DSG=1 CHG=0 */
-    }
+    /* Only record intent; ProtectionCheck performs the actual output. */
+    s_manual_dsg_off = 0;
 }
 
 /**
@@ -320,15 +320,10 @@ void BQ76940_OpenDSG(void)
  */
 void BQ76940_CloseDSG(void)
 {
-    BQ_ReadMosStatus();
-    if (bms_data.chg_on)
-    {
-        BQ_WriteReg(REG_SYS_CTRL2, 0x41); /* DSG=0 CHG=1 */
-    }
-    else
-    {
-        BQ_WriteReg(REG_SYS_CTRL2, 0x40); /* DSG=0 CHG=0 */
-    }
+    /* Closing is fail-safe and takes effect immediately. */
+    s_mos_state_valid = 0;
+    s_manual_dsg_off = 1;
+    BQ_ApplyDesiredMosState();
     /* 不再清均衡手动关DSG不应影响均衡, 保护清均衡在BQ_CheckXX*/
 }
 
@@ -338,8 +333,9 @@ void BQ76940_CloseDSG(void)
  */
 void BQ76940_OpenAll(void)
 {
-    BQ_WriteReg(REG_SYS_STAT, 0xFF);   /* 清除告警标志, 否则BQ76940拒绝开FET */
-    BQ_WriteReg(REG_SYS_CTRL2, 0x43); /* CC_EN=1 DSG=1 CHG=1 */
+    /* Only record intent; ProtectionCheck performs the actual output. */
+    s_manual_chg_off = 0;
+    s_manual_dsg_off = 0;
 }
 
 /**
@@ -348,7 +344,11 @@ void BQ76940_OpenAll(void)
  */
 void BQ76940_CloseAll(void)
 {
-    BQ_WriteReg(REG_SYS_CTRL2, 0x40); /* CC_EN=1 DSG=0 CHG=0 */
+    /* Closing is fail-safe and takes effect immediately. */
+    s_mos_state_valid = 0;
+    s_manual_chg_off = 1;
+    s_manual_dsg_off = 1;
+    BQ_ApplyDesiredMosState();
     /* 不再清均衡手动MOS全关不应影响均衡, 保护清均衡在BQ_CheckXX*/
 }
 
@@ -357,12 +357,12 @@ void BQ76940_CloseAll(void)
  *
  * 原代码保护逻辑特点:
  *   1. 过压: 只检查部分电压0,1,4,5,6,9,10,11,14), 不是全部15节
- *      -> 这里改进为检查全部15节, 更安
+ *      -> 这里检查全部9节有效逻辑电芯
  *   2. 恢复判断: 原代码也只检查部分电压
- *      -> 这里改进为全5节都满足才恢复
+ *      -> 这里要求全部数据有效且所有电芯满足恢复条件
  *   3. 过温: 原代码从Flash读阈 这里先用宏定
  *      -> 并增加回OT_THRESHOLD和OT_RECOVER不同), 防止温度抖动反复触发
- *   4. 每次保护动作后都清SYS_STAT, 与原代码一致
+ *   4. 每个检查函数只维护锁存条件, MOS由统一仲裁器输出
  * ===================================================== */
 
 static BQ76940_Protection_t g_prot = {0};
@@ -370,20 +370,87 @@ static BQ76940_Protection_t g_prot = {0};
 /* Number of consecutive fully-valid data cycles while recovering. */
 static uint16_t s_data_good_streak = 0;
 
-static uint8_t BQ_AnyProtectionActive(void)
+/* Overcurrent recovery only counts distinct, newly sampled current values. */
+static uint16_t s_oc_recover_streak = 0;
+static uint32_t s_oc_last_sample_seq = 0;
+
+typedef struct
 {
-    return (uint8_t)(g_prot.ov_flag || g_prot.uv_flag || g_prot.oc_flag ||
-                     g_prot.ot_flag || g_prot.lt_flag || g_prot.data_fault);
+    uint8_t active;
+    uint8_t clear_requested;
+    uint8_t clear_good_streak;
+    uint32_t last_action_tick;
+} BQ_LatchedFaultRecovery_t;
+
+static BQ_LatchedFaultRecovery_t s_xready_recovery = {0};
+static BQ_LatchedFaultRecovery_t s_ovrd_alert_recovery = {0};
+
+static void BQ_HwFaultRecoveryReset(void)
+{
+    memset(&s_xready_recovery, 0, sizeof(s_xready_recovery));
+    memset(&s_ovrd_alert_recovery, 0, sizeof(s_ovrd_alert_recovery));
 }
 
-static uint8_t BQ_AllCellDataValid(void)
+/*
+ * DEVICE_XREADY and OVRD_ALERT are latched by the AFE. Wait before the first
+ * clear request, then require several clean reads before releasing the MOS latch.
+ */
+static uint8_t BQ_UpdateLatchedFault(uint8_t present, uint8_t clear_bit,
+                                     BQ_LatchedFaultRecovery_t *state,
+                                     uint8_t *clear_mask)
+{
+    uint32_t now = HAL_GetTick();
+
+    if (present)
+    {
+        state->clear_good_streak = 0;
+
+        if (!state->active)
+        {
+            state->active = 1;
+            state->clear_requested = 0;
+            state->last_action_tick = now;
+        }
+        else if (state->clear_requested)
+        {
+            /* The clear did not hold; require a full new delay before retrying. */
+            state->clear_requested = 0;
+            state->last_action_tick = now;
+        }
+        else if ((uint32_t)(now - state->last_action_tick) >=
+                 BMS_HW_FAULT_CLEAR_DELAY_MS)
+        {
+            *clear_mask |= clear_bit;
+            state->clear_requested = 1;
+            state->last_action_tick = now;
+        }
+
+        return 1;
+    }
+
+    if (!state->active)
+        return 0;
+
+    if (state->clear_good_streak < 0xFFU)
+        state->clear_good_streak++;
+
+    if (state->clear_good_streak >= BMS_HW_FAULT_CONFIRM_SAMPLES)
+    {
+        memset(state, 0, sizeof(*state));
+        return 0;
+    }
+
+    return 1;
+}
+
+static uint8_t BQ_AllInputDataValid(void)
 {
     for (int i = 0; i < CELL_COUNT; i++)
     {
         if (!bms_data.cell_valid[i])
             return 0;
     }
-    return bms_data.temp_valid ? 1 : 0;
+    return (bms_data.temp_valid && bms_data.current_valid) ? 1 : 0;
 }
 
 /*
@@ -406,12 +473,14 @@ static void BQ_CheckDataValidity(void)
     if (bms_data.temp_invalid_streak >= BMS_INVALID_SAMPLE_LIMIT)
         invalid_fault = 1;
 
+    if (bms_data.current_invalid_streak >= BMS_CURRENT_INVALID_LIMIT)
+        invalid_fault = 1;
+
     if (invalid_fault)
     {
         s_data_good_streak = 0;
         if (!g_prot.data_fault)
         {
-            BQ76940_CloseAll();
             BQ76940_ClearBalance();
             g_prot.data_fault = 1;
         }
@@ -424,7 +493,7 @@ static void BQ_CheckDataValidity(void)
         return;
     }
 
-    if (!BQ_AllCellDataValid())
+    if (!BQ_AllInputDataValid())
     {
         s_data_good_streak = 0;
         return;
@@ -437,8 +506,48 @@ static void BQ_CheckDataValidity(void)
     {
         g_prot.data_fault = 0;
         s_data_good_streak = 0;
-        if (!BQ_AnyProtectionActive())
-            BQ76940_OpenAll();
+    }
+}
+
+/*
+ * Single point of MOS arbitration. Protection functions only maintain latches;
+ * this function applies the combined CHG/DSG request exactly once per cycle.
+ */
+static void BQ_ApplyDesiredMosState(void)
+{
+    uint8_t desired_chg = (uint8_t)(
+        !g_prot.ov_flag && !g_prot.oc_flag && !g_prot.ot_flag &&
+        !g_prot.lt_flag && !g_prot.data_fault && !s_manual_chg_off &&
+        !g_prot.hw_ov && !g_prot.hw_scd && !g_prot.hw_ocd &&
+        !g_prot.hw_device_xready && !g_prot.hw_ovrd_alert);
+    uint8_t desired_dsg = (uint8_t)(
+        !g_prot.uv_flag && !g_prot.oc_flag && !g_prot.ot_flag &&
+        !g_prot.data_fault && !s_manual_dsg_off &&
+        !g_prot.hw_uv && !g_prot.hw_scd && !g_prot.hw_ocd &&
+        !g_prot.hw_device_xready && !g_prot.hw_ovrd_alert);
+    uint8_t ctrl;
+
+    if (s_mos_state_valid &&
+        desired_chg == s_applied_chg && desired_dsg == s_applied_dsg)
+    {
+        return;
+    }
+
+    ctrl = (uint8_t)(0x40u |
+                    (desired_dsg ? 0x02u : 0x00u) |
+                    (desired_chg ? 0x01u : 0x00u));
+
+    if (BQ_WriteReg(REG_SYS_CTRL2, ctrl) == 0)
+    {
+        s_applied_chg = desired_chg;
+        s_applied_dsg = desired_dsg;
+        s_mos_state_valid = 1;
+        bms_data.chg_on = desired_chg;
+        bms_data.dsg_on = desired_dsg;
+    }
+    else
+    {
+        s_mos_state_valid = 0;
     }
 }
 
@@ -478,9 +587,7 @@ static void BQ_CheckOV(void)
                 continue;
             if (bms_data.cell_mv[i] > BQ_OV_THRESHOLD)
             {
-                BQ76940_CloseCHG();              /* 关充电MOS */
                  BQ76940_ClearBalance();   /* 保护触发时停止均衡 */
-                BQ_WriteReg(REG_SYS_STAT, 0xFF); /* 清状态 */
                 g_prot.ov_flag = 1;
                 return;
             }
@@ -490,7 +597,7 @@ static void BQ_CheckOV(void)
     /* --- 恢复检查: 全部电芯低于恢复阈值--- */
     if (g_prot.ov_flag)
     {
-        if (!BQ_AllCellDataValid())
+        if (!BQ_AllInputDataValid())
             return;
         for (int i = 0; i < CELL_COUNT; i++)
         {
@@ -500,8 +607,6 @@ static void BQ_CheckOV(void)
             }
         }
         /* 全部低于恢复阈值 解除保护 */
-        BQ76940_OpenCHG();
-        BQ_WriteReg(REG_SYS_STAT, 0xFF);
         g_prot.ov_flag = 0;
     }
 }
@@ -522,9 +627,7 @@ static void BQ_CheckUV(void)
                 continue;
             if (bms_data.cell_mv[i] < BQ_UV_THRESHOLD)
             {
-                BQ76940_CloseDSG();
                  BQ76940_ClearBalance();   /* 保护触发时停止均衡 */
-                BQ_WriteReg(REG_SYS_STAT, 0xFF);
                 g_prot.uv_flag = 1;
                 return;
             }
@@ -533,7 +636,7 @@ static void BQ_CheckUV(void)
 
     if (g_prot.uv_flag)
     {
-        if (!BQ_AllCellDataValid())
+        if (!BQ_AllInputDataValid())
             return;
         for (int i = 0; i < CELL_COUNT; i++)
         {
@@ -542,8 +645,6 @@ static void BQ_CheckUV(void)
                 return; /* 还有电芯没恢复*/
             }
         }
-        BQ76940_OpenDSG();
-        BQ_WriteReg(REG_SYS_STAT, 0xFF);
         g_prot.uv_flag = 0;
     }
 }
@@ -567,20 +668,39 @@ static void BQ_CheckOC(void)
     {
         if (abs_current > BQ_OC_THRESHOLD)
         {
-            BQ76940_CloseAll();
-             BQ76940_ClearBalance();   /* 保护触发时停止均衡 */
-            BQ_WriteReg(REG_SYS_STAT, 0xFF);
+            BQ76940_ClearBalance();   /* 保护触发时停止均衡 */
             g_prot.oc_flag = 1;
+            s_oc_recover_streak = 0;
+            /* Do not start recovery from an older current sample. */
+            s_oc_last_sample_seq = bms_data.current_sample_seq;
+            return;
         }
     }
 
     if (g_prot.oc_flag)
     {
-        if (BQ_AllCellDataValid() && abs_current < BQ_OC_RECOVER)
+        /* Never clear overcurrent from the same sample that caused/observed it. */
+        if (!BQ_AllInputDataValid() ||
+            bms_data.current_sample_seq == s_oc_last_sample_seq)
         {
-            BQ76940_OpenAll();
-            BQ_WriteReg(REG_SYS_STAT, 0xFF);
+            return;
+        }
+
+        s_oc_last_sample_seq = bms_data.current_sample_seq;
+
+        if (abs_current >= BQ_OC_RECOVER)
+        {
+            s_oc_recover_streak = 0;
+            return;
+        }
+
+        if (s_oc_recover_streak < BMS_OC_RECOVER_SAMPLES)
+            s_oc_recover_streak++;
+
+        if (s_oc_recover_streak >= BMS_OC_RECOVER_SAMPLES)
+        {
             g_prot.oc_flag = 0;
+            s_oc_recover_streak = 0;
         }
     }
 }
@@ -602,19 +722,15 @@ static void BQ_CheckOT(void)
     {
         if (bms_data.temp_degC > (float)BQ_OT_THRESHOLD)
         {
-            BQ76940_CloseAll();
              BQ76940_ClearBalance();   /* 保护触发时停止均衡 */
-            BQ_WriteReg(REG_SYS_STAT, 0xFF);
             g_prot.ot_flag = 1;
         }
     }
 
     if (g_prot.ot_flag)
     {
-        if (BQ_AllCellDataValid() && bms_data.temp_degC < (float)BQ_OT_RECOVER)
+        if (BQ_AllInputDataValid() && bms_data.temp_degC < (float)BQ_OT_RECOVER)
         {
-            BQ76940_OpenAll();
-            BQ_WriteReg(REG_SYS_STAT, 0xFF);
             g_prot.ot_flag = 0;
         }
     }
@@ -635,7 +751,6 @@ static void BQ_CheckLT(void)
     {
         if (bms_data.temp_degC < (float)BQ_LT_THRESHOLD)
         {
-            BQ76940_CloseCHG();              /* 仅关充电MOS, 放电不受影响 */
             BQ76940_ClearBalance();          /* 低温时也停止均衡 */
             g_prot.lt_flag = 1;
         }
@@ -643,9 +758,8 @@ static void BQ_CheckLT(void)
 
     if (g_prot.lt_flag)
     {
-        if (BQ_AllCellDataValid() && bms_data.temp_degC > (float)BQ_LT_RECOVER)
+        if (BQ_AllInputDataValid() && bms_data.temp_degC > (float)BQ_LT_RECOVER)
         {
-            BQ76940_OpenCHG();
             g_prot.lt_flag = 0;
         }
     }
@@ -659,13 +773,16 @@ static void BQ_CheckLT(void)
 void BQ76940_ProtectionCheck(void)
 {
     BQ_CheckDataValidity();
-    if (g_prot.data_fault)
-        return;
-    BQ_CheckOV();
-    BQ_CheckUV();
-    BQ_CheckOC();
-    BQ_CheckOT();
-    BQ_CheckLT();
+    if (!g_prot.data_fault)
+    {
+        BQ_CheckOV();
+        BQ_CheckUV();
+        BQ_CheckOC();
+        BQ_CheckOT();
+        BQ_CheckLT();
+    }
+
+    BQ_ApplyDesiredMosState();
 }
 
 /**
@@ -677,14 +794,71 @@ void BQ76940_ProtectionCheck(void)
 void BQ76940_ReadAlerts(void)
 {
     uint8_t sys_stat = 0;
+    uint8_t clear_mask = 0;
+    uint8_t new_hw_fault = 0;
+    uint8_t hw_xready_present;
+    uint8_t hw_ovrd_present;
 
     if (BQ_ReadReg(REG_SYS_STAT, &sys_stat) != 0)
+    {
+        s_data_good_streak = 0;
+        if (!g_prot.data_fault)
+        {
+            BQ76940_ClearBalance();
+            g_prot.data_fault = 1;
+        }
+        BQ_ForceMosOff();
         return;
+    }
 
-    g_prot.hw_uv = (sys_stat & 0x08) ? 1 : 0;
-    g_prot.hw_ov = (sys_stat & 0x04) ? 1 : 0;
-    g_prot.hw_scd = (sys_stat & 0x02) ? 1 : 0;
-    g_prot.hw_ocd = (sys_stat & 0x01) ? 1 : 0;
+    g_prot.hw_uv = (sys_stat & BQ_SYS_STAT_UV) ? 1 : 0;
+    g_prot.hw_ov = (sys_stat & BQ_SYS_STAT_OV) ? 1 : 0;
+    g_prot.hw_scd = (sys_stat & BQ_SYS_STAT_SCD) ? 1 : 0;
+    g_prot.hw_ocd = (sys_stat & BQ_SYS_STAT_OCD) ? 1 : 0;
+    hw_xready_present = (sys_stat & BQ_SYS_STAT_DEVICE_XREADY) ? 1 : 0;
+    hw_ovrd_present = (sys_stat & BQ_SYS_STAT_OVRD_ALERT) ? 1 : 0;
+    g_prot.hw_device_xready = BQ_UpdateLatchedFault(
+        hw_xready_present, BQ_SYS_STAT_DEVICE_XREADY,
+        &s_xready_recovery, &clear_mask);
+    g_prot.hw_ovrd_alert = BQ_UpdateLatchedFault(
+        hw_ovrd_present, BQ_SYS_STAT_OVRD_ALERT,
+        &s_ovrd_alert_recovery, &clear_mask);
+
+    /* Mirror hardware trips into the same software latches used by arbitration. */
+    if (g_prot.hw_uv)
+    {
+        if (!g_prot.uv_flag)
+            new_hw_fault = 1;
+        g_prot.uv_flag = 1;
+        clear_mask |= BQ_SYS_STAT_UV;
+    }
+    if (g_prot.hw_ov)
+    {
+        if (!g_prot.ov_flag)
+            new_hw_fault = 1;
+        g_prot.ov_flag = 1;
+        clear_mask |= BQ_SYS_STAT_OV;
+    }
+    if (g_prot.hw_scd || g_prot.hw_ocd)
+    {
+        if (!g_prot.oc_flag)
+            new_hw_fault = 1;
+        g_prot.oc_flag = 1;
+        s_oc_recover_streak = 0;
+        s_oc_last_sample_seq = bms_data.current_sample_seq;
+        clear_mask |= (g_prot.hw_scd ? BQ_SYS_STAT_SCD : 0u);
+        clear_mask |= (g_prot.hw_ocd ? BQ_SYS_STAT_OCD : 0u);
+    }
+
+    if (g_prot.hw_device_xready || g_prot.hw_ovrd_alert)
+        new_hw_fault = 1;
+
+    if (new_hw_fault)
+        BQ76940_ClearBalance();
+
+    /* Normal trips clear now; internal/ALERT faults are added only after their delay. */
+    if (clear_mask != 0)
+        BQ_WriteReg(REG_SYS_STAT, clear_mask);
 }
 
 void BQ76940_ProtectionGet(BQ76940_Protection_t *prot)
@@ -696,9 +870,21 @@ void BQ76940_ProtectionGet(BQ76940_Protection_t *prot)
 
 void BQ76940_ProtectionReset(void)
 {
+    uint8_t clear_mask = BQ_SYS_STAT_UV | BQ_SYS_STAT_OV |
+                        BQ_SYS_STAT_SCD | BQ_SYS_STAT_OCD;
+
     memset(&g_prot, 0, sizeof(g_prot));
+    /* Require fresh valid samples before the reset can re-enable the MOS. */
+    g_prot.data_fault = 1;
     s_data_good_streak = 0;
-    BQ_WriteReg(REG_SYS_STAT, 0xFF); /* 同时清硬件标志*/
+    s_oc_recover_streak = 0;
+    s_oc_last_sample_seq = bms_data.current_sample_seq;
+    BQ_HwFaultRecoveryReset();
+
+    if (BQ_WriteReg(REG_SYS_STAT, clear_mask) != 0)
+        g_prot.data_fault = 1;
+
+    BQ_ForceMosOff();
 }
 
 /**
@@ -901,29 +1087,28 @@ void BQ76940_Init(void)
 
     /*  寄存器初始化
      * 对应原代码BQ_1_config() 循环写入:
-     *   [0] SYS_STAT  =0xFF  清除所有标志
-     *   [1] CELLBAL1  =0x00  关均衡~5
-     *   [2] CELLBAL2  =0x00  关均衡~10
-     *   [3] CELLBAL3  =0x00  关均衡1~15
-     *   [4] SYS_CTRL1 =0x18  ADC_EN=1, TEMP_SEL=1
-     *   [5] SYS_CTRL2 =0x43  CC_EN=1, DSG_ON=1, CHG_ON=1
-     *   [6] PROTECT1  =0x00
-     *   [7] PROTECT2  =0x00
-     *   [8] PROTECT3  =0x00
-     *   [9] OV_TRIP   =0x00
-     *  [10] UV_TRIP   =0x00
-     *  [11] CC_CFG    =0x19  库仑计配置*/
-    uint8_t init_reg[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05,
-                          0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B};
-    uint8_t init_data[] = {0xFF, 0x00, 0x00, 0x00, 0x18, 0x43,
-                           0x00, 0x00, 0x00, 0x00, 0x00, 0x19};
+     *   [0] CELLBAL1  =0x00  关均衡~5
+     *   [1] CELLBAL2  =0x00  关均衡~10
+     *   [2] CELLBAL3  =0x00  关均衡1~15
+     *   [3] SYS_CTRL1 =0x18  ADC_EN=1, TEMP_SEL=1
+     *   [4] SYS_CTRL2 =0x40  CC_EN=1, DSG/CHG保持关闭
+     *   [5] PROTECT1  =0x00
+     *   [6] PROTECT2  =0x00
+     *   [7] PROTECT3  =0x00
+     *   [8] OV_TRIP   =0x00
+     *   [9] UV_TRIP   =0x00
+     *  [10] CC_CFG    =0x19  库仑计配置*/
+    uint8_t init_reg[] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+                          0x07, 0x08, 0x09, 0x0A, 0x0B};
+    uint8_t init_data[] = {0x00, 0x00, 0x00, 0x18, 0x40, 0x00,
+                           0x00, 0x00, 0x00, 0x00, 0x19};
 
-    for (int i = 0; i < 12; i++)
+    for (int i = 0; i < 11; i++)
     {
         BQ_Delay(10);
         if (BQ_WriteReg(init_reg[i], init_data[i]) != 0)
         {
-            BQ76940_CloseAll();
+            BQ_ForceMosOff();
             return;
         }
     }
@@ -931,7 +1116,7 @@ void BQ76940_Init(void)
     /*  读ADC校准, 对应原代码Get_offset() */
     if (BQ_ReadCalibration() != 0)
     {
-        BQ76940_CloseAll();
+        BQ_ForceMosOff();
         return;
     }
 
@@ -940,33 +1125,27 @@ void BQ76940_Init(void)
      *   OVPThreshold=4400mV, UVPThreshold=2400mV
      *   t=0.377 (GAIN/1000近似值)
      *   Trip = ((Threshold - offset) / t + 0.5) >> 4 */
-    float t = 0.377f;
-    uint8_t ov_trip = (uint8_t)((((uint16_t)((4400 - bms_data.adc_offset) / t + 0.5f)) >> 4) & 0xFF);
-    uint8_t uv_trip = (uint8_t)((((uint16_t)((2400 - bms_data.adc_offset) / t + 0.5f)) >> 4) & 0xFF);
+    float t = (float)bms_data.adc_gain / 1000.0f;
+    uint8_t ov_trip = (uint8_t)((((uint16_t)((BMS_BQ_HW_OV_TRIP_MV - bms_data.adc_offset) / t + 0.5f)) >> 4) & 0xFF);
+    uint8_t uv_trip = (uint8_t)((((uint16_t)((BMS_BQ_HW_UV_TRIP_MV - bms_data.adc_offset) / t + 0.5f)) >> 4) & 0xFF);
     if (BQ_WriteReg(REG_OV_TRIP, ov_trip) != 0 ||
         BQ_WriteReg(REG_UV_TRIP, uv_trip) != 0)
     {
-        BQ76940_CloseAll();
+        BQ_ForceMosOff();
         return;
     }
 
     /*  SCD/OCD保护
      * 对应原代码OCD_SCD_PROTECT():
-     *   PROTECT1=0xFF  SCD延时400us, 阈值00mV
-     *   PROTECT2=0xFF  OCD延时1280ms, 阈值00mV */
-    if (BQ_WriteReg(REG_PROTECT1, 0xFF) != 0 ||
-        BQ_WriteReg(REG_PROTECT2, 0xFF) != 0)
+     *   PROTECT1=0x9F  SCD延时400us, 阈值200mV, 保留位清零
+     *   PROTECT2=0x7F  OCD延时1280ms, 阈值100mV, 保留位清零 */
+    if (BQ_WriteReg(REG_PROTECT1, BMS_BQ_PROTECT1_VALUE) != 0 ||
+        BQ_WriteReg(REG_PROTECT2, BMS_BQ_PROTECT2_VALUE) != 0)
     {
-        BQ76940_CloseAll();
+        BQ_ForceMosOff();
         return;
     }
 
-    /*  清状态寄存器 */
-    if (BQ_WriteReg(REG_SYS_STAT, 0xFF) != 0)
-    {
-        BQ76940_CloseAll();
-        return;
-    }
 
     /* 初始化过滤相关状 避免上电随机制*/
     for (int i = 0; i < CELL_COUNT; i++)
@@ -983,6 +1162,16 @@ void BQ76940_Init(void)
     bms_data.temp_invalid_cnt = 0;
     bms_data.temp_invalid_streak = 0;
     bms_data.temp_degC = 25.0f; /* 上电默认25°C, 防止首轮误触发*/
+    bms_data.current_mA = 0;
+    bms_data.current_valid = 0;
+    bms_data.current_invalid_cnt = 0;
+    bms_data.current_invalid_streak = 0;
+    bms_data.current_not_ready_streak = 0;
+    bms_data.current_sample_seq = 0;
+    s_oc_recover_streak = 0;
+    s_oc_last_sample_seq = 0;
+    BQ_CurrentFilterReset();
+    BQ_HwFaultRecoveryReset();
 
     /* 初始化电芯滤波窗口*/
     for (int i = 0; i < CELL_COUNT; i++)
@@ -998,10 +1187,15 @@ void BQ76940_Init(void)
      /* 均衡初始 关闭所有均衡道 (对应原BSP BQ_1_configCELLBAL1/2/3=0x00) */
     if (BQ_SetBalanceChecked(0x0000) != 0)
     {
-        BQ76940_CloseAll();
+        BQ_ForceMosOff();
         return;
     }
     s_bq_initialized = 1;
+    /* Require fresh valid samples before energizing the pack after init. */
+    g_prot.data_fault = 1;
+    s_data_good_streak = 0;
+    s_mos_state_valid = 0;
+    BQ_ApplyDesiredMosState();
 }
 
 /**
@@ -1262,7 +1456,7 @@ void BQ76940_ReadAllCells(void)
         }
 
         /* 原始计算 mV = (raw * gain)/1000 + offset */
-        int16_t raw = ((int16_t)raw_bytes[0] << 8) | raw_bytes[1];
+        uint16_t raw = (((uint16_t)raw_bytes[0] & 0x3Fu) << 8) | raw_bytes[1];
         int sample_mv = (raw * gain) / 1000 + offset;
 
         /* 小步: 对单体电压做越界过滤 */
@@ -1334,7 +1528,7 @@ void BQ76940_ReadTemp(void)
         return;
     }
 
-    int raw = ((int)raw_bytes[0] << 8) | raw_bytes[1];
+    int raw = (((int)raw_bytes[0] & 0x3F) << 8) | raw_bytes[1];
 
     /* ADC转电压(对应原代码 vtsx = raw * 382 / 1000) */
     int vtsx_mv = raw * 382 / 1000;
@@ -1355,7 +1549,7 @@ void BQ76940_ReadTemp(void)
     float sample_temp;
     if (Rt > 0.0f)
     {
-        sample_temp = 1.0f / (1.0f / T2 + logf(Rt / Rp) / Bx) - Ka + 0.5f;
+        sample_temp = 1.0f / (1.0f / T2 + logf(Rt / Rp) / Bx) - Ka;
     }
     else
     {
@@ -1388,8 +1582,8 @@ void BQ76940_ReadTemp(void)
 /**
  * @brief  读取电流 (库仑计
  * @note   对应原代码Get_BQ_Current()
- *         raw<=0x7D00: 放电, I = raw * 2.11 mA
- *         raw> 0x7D00: 充电, I = -(0xFFFF-raw) * 2.11 mA
+ *         CC_HI/CC_LO为16位二补码, I = signed_raw * CC_LSB_MA
+ *         正值为放电, 负值为充电
  *         2.11 = 8.44uV/LSB / 4mR采样电阻
  *         如果采样电阻不是4mR, 改系数 8.44/Rsense(mR)
  *
@@ -1402,6 +1596,26 @@ static int s_curr_buf[CURR_FILTER_LEN] = {0};
 static uint8_t s_curr_idx = 0;
 static uint8_t s_curr_filled = 0;
 
+static void BQ_CurrentFilterReset(void)
+{
+    for (int i = 0; i < CURR_FILTER_LEN; i++)
+        s_curr_buf[i] = 0;
+    s_curr_idx = 0;
+    s_curr_filled = 0;
+}
+
+/* Preserve the last value for display but stop trusting it as fresh current. */
+static void BQ_MarkCurrentInvalid(void)
+{
+    bms_data.current_valid = 0;
+    bms_data.current_not_ready_streak = 0;
+    BQ_CurrentFilterReset();
+    if (bms_data.current_invalid_cnt < 0xFFFFU)
+        bms_data.current_invalid_cnt++;
+    if (bms_data.current_invalid_streak < 0xFFFFU)
+        bms_data.current_invalid_streak++;
+}
+
 void BQ76940_ReadCurrent(void)
 {
     uint8_t raw_bytes[2];
@@ -1409,29 +1623,39 @@ void BQ76940_ReadCurrent(void)
 
     /* 检查CC_READY(SYS_STAT bit7), 未就绪则跳过本次 */
     if (BQ_ReadReg(REG_SYS_STAT, &sys_stat) != 0)
-        return;
-    if (!(sys_stat & 0x80))
     {
-        return;  /* CC转换未完成 保留上次值*/
+        BQ_MarkCurrentInvalid();
+        return;
+    }
+    if (!(sys_stat & BQ_SYS_STAT_CC_READY))
+    {
+        if (bms_data.current_not_ready_streak < 0xFFFFU)
+            bms_data.current_not_ready_streak++;
+
+        /* A short ALERT wake-up may precede the next 250ms conversion. */
+        if (bms_data.current_not_ready_streak >= BMS_CC_NOT_READY_LIMIT)
+            BQ_MarkCurrentInvalid();
+        return;
     }
     /* 清CC_READY标志 */
-    if (BQ_WriteReg(REG_SYS_STAT, 0x80) != 0)
+    if (BQ_WriteReg(REG_SYS_STAT, BQ_SYS_STAT_CC_READY) != 0)
+    {
+        BQ_MarkCurrentInvalid();
         return;
+    }
 
     if (BQ_ReadRegs(REG_CC_HI, raw_bytes, 2) != 0)
+    {
+        BQ_MarkCurrentInvalid();
         return;
+    }
 
     uint16_t raw = ((uint16_t)raw_bytes[0] << 8) | raw_bytes[1];
-    int sample;
-
-    if (raw <= 0x7D00)
-    {
-        sample = (int)(raw * 2.11f);
-    }
-    else
-    {
-        sample = -(int)((0xFFFF - raw) * 2.11f);
-    }
+    bms_data.current_not_ready_streak = 0;
+    bms_data.current_sample_seq++;
+    /* CC是16位二补码: 先转int16_t, 由C符号扩展得到正确充放电方向. */
+    int16_t signed_raw = (int16_t)raw;
+    int sample = (int)((float)signed_raw * BMS_CC_LSB_MA);
 
     /* 移动平均滤波 */
     s_curr_buf[s_curr_idx] = sample;
@@ -1451,6 +1675,11 @@ void BQ76940_ReadCurrent(void)
     {
         bms_data.current_mA = 0;
     }
+
+    /* After an invalid gap, require a complete new filter window. */
+    bms_data.current_valid = s_curr_filled ? 1 : 0;
+    if (bms_data.current_valid)
+        bms_data.current_invalid_streak = 0;
 }
 
 /* ==================== SOC估算(电压查表 ====================
@@ -1705,6 +1934,11 @@ void BQ76940_PrintData(UART_HandleTypeDef *huart)
     len = snprintf(buf, sizeof(buf), "Curr:   %d mA\r\n", bms_data.current_mA);
     UART_DMA_Send((uint8_t *)buf, len);
 
+    len = snprintf(buf, sizeof(buf), "CurrOk: %d, bad=%u\r\n",
+                   bms_data.current_valid,
+                   bms_data.current_invalid_cnt);
+    UART_DMA_Send((uint8_t *)buf, len);
+
     len = snprintf(buf, sizeof(buf), "CHG: %s  DSG: %s\r\n",
                    bms_data.chg_on ? "ON" : "OFF",
                    bms_data.dsg_on ? "ON" : "OFF");
@@ -1717,9 +1951,11 @@ void BQ76940_PrintData(UART_HandleTypeDef *huart)
                    g_prot.data_fault);
     UART_DMA_Send((uint8_t *)buf, len);
 
-    len = snprintf(buf, sizeof(buf), "HW:   OV=%d UV=%d SCD=%d OCD=%d\r\n",
+    len = snprintf(buf, sizeof(buf),
+                   "HW:   OV=%d UV=%d SCD=%d OCD=%d DX=%d OA=%d\r\n",
                    g_prot.hw_ov, g_prot.hw_uv,
-                   g_prot.hw_scd, g_prot.hw_ocd);
+                   g_prot.hw_scd, g_prot.hw_ocd,
+                   g_prot.hw_device_xready, g_prot.hw_ovrd_alert);
     UART_DMA_Send((uint8_t *)buf, len);
 
     len = snprintf(buf, sizeof(buf), "GAIN:   %d uV, Offset: %d mV\r\n", bms_data.adc_gain, bms_data.adc_offset);

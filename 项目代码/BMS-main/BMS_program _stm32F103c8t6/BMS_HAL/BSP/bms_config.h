@@ -27,6 +27,31 @@
 
 /* Current-sense resistor value. */
 #define BMS_SHUNT_MILLIOHM          4u
+#define BMS_CC_LSB_MA               (8.44f / (float)BMS_SHUNT_MILLIOHM)
+
+/* Same SCD/OCD thresholds as the previous 0xFF writes, with reserved bits cleared. */
+#define BMS_BQ_PROTECT1_VALUE       0x9F  /* RSNS=1, 400us, 200mV */
+#define BMS_BQ_PROTECT2_VALUE       0x7F  /* 1280ms, 100mV */
+
+/* Hardware OV/UV trip targets, encoded with the device ADC gain and offset. */
+#define BMS_BQ_HW_OV_TRIP_MV        4400
+#define BMS_BQ_HW_UV_TRIP_MV        2400
+
+/* Consecutive current-read failures before current data is considered faulty. */
+#define BMS_CURRENT_INVALID_LIMIT   3
+
+/* Consecutive CC updates without CC_READY before current data is stale. */
+#define BMS_CC_NOT_READY_LIMIT      3
+
+/* Fresh valid current samples required before clearing an overcurrent latch. */
+#define BMS_OC_RECOVER_SAMPLES      3
+
+/* Wait and confirmation window for latched AFE-internal/ALERT faults. */
+#define BMS_HW_FAULT_CLEAR_DELAY_MS 5000u
+#define BMS_HW_FAULT_CONFIRM_SAMPLES 3u
+
+/* Upper bound for one SOC integration step after a scheduling/communication gap. */
+#define BMS_SOC_MAX_DT_MS           2000u
 
 /* Current software thresholds are intentionally unchanged. */
 #define BMS_NOMINAL_CAP_MAH         20000

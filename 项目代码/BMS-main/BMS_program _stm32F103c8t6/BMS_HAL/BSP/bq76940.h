@@ -44,7 +44,14 @@ extern "C" {
                                  * bit[2]=OV  过压标志
                                  * bit[1]=SCD 短路标志
                                  * bit[0]=OCD 过流标志
-                                 * 写0xFF可清除所有标志 */
+                                 * 写1清除对应标志 */
+#define BQ_SYS_STAT_CC_READY      0x80u
+#define BQ_SYS_STAT_DEVICE_XREADY 0x20u
+#define BQ_SYS_STAT_OVRD_ALERT    0x10u
+#define BQ_SYS_STAT_UV            0x08u
+#define BQ_SYS_STAT_OV            0x04u
+#define BQ_SYS_STAT_SCD           0x02u
+#define BQ_SYS_STAT_OCD           0x01u
 #define REG_CELLBAL1    0x01    /* 均衡控制1, 控制 Cell 1~5 的均衡开关 */
 #define REG_CELLBAL2    0x02    /* 均衡控制2, 控制 Cell 6~10 的均衡开关 */
 #define REG_CELLBAL3    0x03    /* 均衡控制3, 控制 Cell 11~15 的均衡开关 (BQ76940特有) */
@@ -187,6 +194,11 @@ typedef struct {
     int      current_mA;            /* 电流, 单位mA
                                      * 对应原代码 Batteryval[17]
                                      * 正值=放电, 负值=充电 */
+    uint8_t  current_valid;         /* 1=本轮电流有效, 0=通信失败或无效 */
+    uint16_t current_invalid_cnt;   /* 累计无效电流采样次数 */
+    uint16_t current_invalid_streak;/* 连续无效电流采样次数 */
+    uint16_t current_not_ready_streak; /* 连续未见CC_READY的次数 */
+    uint32_t current_sample_seq;    /* 每取得一笔新CC原始值递增 */
     int      adc_gain;              /* ADC增益, 单位μV
                                      * 对应原代码 GAIN, 典型值约377 */
     int8_t   adc_offset;            /* ADC偏移, 单位mV, 有符号
@@ -246,8 +258,8 @@ void BQ76940_ReadTemp(void);
 /**
  * @brief  读取电流 (库仑计CC寄存器)
  * @note   对应原代码 void Get_BQ_Current(void)
- *         raw <= 0x7D00 时为正向电流: I = raw * 2.11 mA
- *         raw > 0x7D00 时为反向电流: I = -(0xFFFF - raw) * 2.11 mA
+ *         CC_HI/CC_LO组成16位二补码, 一次I2C事务连续读取
+ *         正值为放电, 负值为充电
  *         2.11的来源: 8.44μV/LSB ÷ 4mΩ采样电阻
  */
 void BQ76940_ReadCurrent(void);
@@ -392,6 +404,8 @@ typedef struct {
                              * 对应原代码 SCD_Alarm_flag */
     uint8_t  hw_ocd;        /* 芯片硬件过流报警
                              * 对应原代码 OCD_Alarm_flag */
+    uint8_t  hw_device_xready; /* 芯片内部故障锁存 */
+    uint8_t  hw_ovrd_alert;    /* ALERT 被外部源强制拉高 */
 } BQ76940_Protection_t;
 
 /* ==================== 保护函数声明 ==================== */
@@ -419,7 +433,7 @@ void BQ76940_ProtectionGet(BQ76940_Protection_t *prot);
 /**
  * @brief  清除所有保护标志 (手动复位)
  */
-void BQ76940_ProtectionReset(void);
+void BQ76940_ProtectionReset(void); /* 复位后保持MOS关闭, 等待新有效样本恢复 */
 
 /* 全局BMS数据, 其他文件可通过 extern 访问 */
 typedef struct {
@@ -442,13 +456,14 @@ uint8_t BQ76940_CommCheck(void);
 /* ===================== MOS管控制 =====================
  * 对应原代码 BQ76930.c 中的6个MOS控制函数
  * SYS_CTRL2寄存器: bit[6]=CC_EN bit[1]=DSG bit[0]=CHG
+ * 这些函数登记手动意图; 最终状态由保护仲裁器统一裁决。
  * ===================================================== */
 
 /**
  * @brief  打开充电MOS, 不影响放电MOS状态
  * @note   对应原代码 Only_Open_CHG()
  */
-void BQ76940_OpenCHG(void);
+void BQ76940_OpenCHG(void); /* 仅登记意图, 由保护仲裁决定最终输出 */
 
 /**
  * @brief  关闭充电MOS, 不影响放电MOS状态
@@ -460,7 +475,7 @@ void BQ76940_CloseCHG(void);
  * @brief  打开放电MOS, 不影响充电MOS状态
  * @note   对应原代码 Only_Open_DSG()
  */
-void BQ76940_OpenDSG(void);
+void BQ76940_OpenDSG(void); /* 仅登记意图, 由保护仲裁决定最终输出 */
 
 /**
  * @brief  关闭放电MOS, 不影响充电MOS状态
@@ -472,7 +487,7 @@ void BQ76940_CloseDSG(void);
  * @brief  同时打开充电+放电MOS
  * @note   对应原代码 Open_DSG_CHG()
  */
-void BQ76940_OpenAll(void);
+void BQ76940_OpenAll(void); /* 仅登记意图, 由保护仲裁决定最终输出 */
 
 /**
  * @brief  同时关闭充电+放电MOS
@@ -483,7 +498,7 @@ void BQ76940_CloseAll(void);
 extern BQ76940_Data_t bms_data;
 
 /* ==================== ALERT 中断 ====================
- * BQ76940 ALERT 引脚接 PB2 (EXTI2, 下降沿触发)
+ * BQ76940 ALERT 引脚接 PB2 (EXTI2, 上升沿触发)
  * 中断中仅置标志, 主循环中处理
  * ===================================================== */
 extern volatile uint8_t g_bq_alert_flag;  /* 1=收到ALERT中断 */

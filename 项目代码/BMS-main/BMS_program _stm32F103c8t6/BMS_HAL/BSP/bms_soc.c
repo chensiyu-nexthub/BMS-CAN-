@@ -6,9 +6,9 @@
  *  ┌─────────────────────────────────────────────┐
  *  │ 1. 库仑积分: soc_mAh -= I * dt / 3600000   │
  *  │ 2. 循环计数: 累积|充电量| ≥ nominal → +1    │
- *  │ 3. OCV校准:  静置30s→电压查表渐进10%修正    │
- *  │ 4. 满充校准:  V≥4150 & |I|<200 → SOC=100%   │
- *  │ 5. 空电检测:  V≤2800 → SOC=0%, arm学习      │
+ *  │ 3. OCV校准:  单体全有效且压差≤50mV才允许   │
+ *  │ 4. 满充校准:  最高单体≥4150 & |I|<200       │
+ *  │ 5. 空电检测:  最低单体≤2800 → SOC=0%       │
  *  │ 6. 容量学习:  空→满 记录Ah, EMA更新 full_cap │
  *  │ 7. 限幅 & 计算百分比                        │
  *  │ 8. 定时Flash保存(变化≥1%才真正写入)         │
@@ -19,10 +19,9 @@
  *    + pad(2) + checksum(4)
  *
  *  【Flash磨损控制】
- *    每60s检查一次, 仅当 soc_mAh 变化 ≥ 1% full_cap 时才擦写.
- *    STM32F103 Flash 耐久 ~10000 次; 若电池1C放电(20A),
- *    SOC每分钟变约1.67%, 约每36s触发一次写入 → ~10000次
- *    ≈ 100小时. 若0.5C放电, ~200小时. 生产环境建议外挂EEPROM.
+ *    最后1KB保留为日志页, 每20字节记录顺序追加, 最多51条.
+ *    写满后才擦除整页, 将每次擦写周期扩展到约51次保存.
+ *    启动时从页内选择地址最高且校验通过的有效记录恢复.
  */
 
 /* Includes ------------------------------------------------------------------*/
@@ -73,10 +72,17 @@ typedef struct {
     uint32_t checksum;            /* 异或校验 */
 } SOC_Flash_t;                    /* 共20字节 */
 
+#define SOC_FLASH_END_ADDR      (SOC_FLASH_ADDR + SOC_FLASH_PAGE_SIZE)
+#define SOC_FLASH_RECORD_SIZE   ((uint32_t)sizeof(SOC_Flash_t))
+
+/* A layout change must be reviewed together with the on-flash record format. */
+typedef char SOC_Flash_size_check_t[(sizeof(SOC_Flash_t) == 20u) ? 1 : -1];
+
 /* ================================================================
  *  内部变量
  * ================================================================ */
 static SOC_State_t s_soc;
+static uint32_t s_flash_next_addr = SOC_FLASH_ADDR;
 
 /* ================================================================
  *  OCV 查表
@@ -107,64 +113,135 @@ static uint32_t flash_checksum(const SOC_Flash_t *p)
  *  Flash 读取 — 从最后页恢复SOC数据
  *  @return 0=成功, -1=无效(首次使用或数据损坏)
  * ================================================================ */
-static int flash_load(void)
+static int flash_record_valid(const SOC_Flash_t *fp)
 {
-    const SOC_Flash_t *fp = (const SOC_Flash_t *)SOC_FLASH_ADDR;
-
-    /* 校验魔数 */
     if (fp->magic != SOC_FLASH_MAGIC)
-        return -1;
-
-    /* 校验数据完整性 */
+        return 0;
     if (fp->checksum != flash_checksum(fp))
+        return 0;
+    if (!(fp->soc_mAh >= 0.0f) || !(fp->soc_mAh <= fp->full_cap_mAh))
+        return 0;
+    if (!(fp->full_cap_mAh >= 1000.0f) ||
+        !(fp->full_cap_mAh <= (float)SOC_NOMINAL_CAP_MAH * 1.5f))
+        return 0;
+    return 1;
+}
+
+static int flash_range_blank(uint32_t addr, uint32_t len)
+{
+    for (uint32_t offset = 0; offset < len; offset += 2u)
+    {
+        if (*(volatile uint16_t *)(addr + offset) != 0xFFFFu)
+            return 0;
+    }
+    return 1;
+}
+
+static int flash_erase_soc_page(void)
+{
+    FLASH_EraseInitTypeDef erase = {0};
+    uint32_t page_err = 0xFFFFFFFFu;
+
+    erase.TypeErase = FLASH_TYPEERASE_PAGES;
+    erase.PageAddress = SOC_FLASH_ADDR;
+    erase.NbPages = 1;
+
+    if (HAL_FLASHEx_Erase(&erase, &page_err) != HAL_OK ||
+        page_err != 0xFFFFFFFFu)
         return -1;
 
-    /* 合理性检查 */
-    if (fp->soc_mAh < 0.0f || fp->full_cap_mAh < 1000.0f)
-        return -1;
+    return flash_range_blank(SOC_FLASH_ADDR, SOC_FLASH_PAGE_SIZE) ? 0 : -1;
+}
 
-    /* 恢复数据 */
-    s_soc.soc_mAh         = fp->soc_mAh;
-    s_soc.full_cap_mAh    = fp->full_cap_mAh;
-    s_soc.cycle_count_x10 = fp->cycle_count_x10;
+static int flash_program_record(const SOC_Flash_t *record, uint32_t addr)
+{
+    const uint16_t *src = (const uint16_t *)record;
+
+    for (uint32_t i = 0; i < SOC_FLASH_RECORD_SIZE / 2u; i++)
+    {
+        if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,
+                              addr + i * 2u, src[i]) != HAL_OK)
+            return -1;
+    }
+
+    for (uint32_t i = 0; i < SOC_FLASH_RECORD_SIZE / 2u; i++)
+    {
+        if (*(volatile uint16_t *)(addr + i * 2u) != src[i])
+            return -1;
+    }
     return 0;
 }
 
-/* ================================================================
- *  Flash 写入 — 擦除最后页并编程
- * ================================================================ */
+static int flash_load(void)
+{
+    const SOC_Flash_t *latest = NULL;
+    uint32_t next_addr = SOC_FLASH_ADDR;
+
+    for (uint32_t addr = SOC_FLASH_ADDR;
+         addr + SOC_FLASH_RECORD_SIZE <= SOC_FLASH_END_ADDR;
+         addr += SOC_FLASH_RECORD_SIZE)
+    {
+        uint16_t first_halfword = *(volatile uint16_t *)addr;
+        if (first_halfword == 0xFFFFu)
+        {
+            continue;
+        }
+
+        /* Address order is the log order; resume after the last nonblank slot. */
+        next_addr = addr + SOC_FLASH_RECORD_SIZE;
+        const SOC_Flash_t *fp = (const SOC_Flash_t *)addr;
+        if (flash_record_valid(fp))
+            latest = fp;
+    }
+
+    s_flash_next_addr = next_addr;
+    if (latest == NULL)
+        return -1;
+
+    s_soc.soc_mAh = latest->soc_mAh;
+    s_soc.full_cap_mAh = latest->full_cap_mAh;
+    s_soc.cycle_count_x10 = latest->cycle_count_x10;
+    return 0;
+}
+
+/* Append a record; erase only when the reserved page is exhausted. */
 void SOC_SaveToFlash(void)
 {
     SOC_Flash_t tmp;
-    tmp.magic           = SOC_FLASH_MAGIC;
-    tmp.soc_mAh         = s_soc.soc_mAh;
-    tmp.full_cap_mAh    = s_soc.full_cap_mAh;
+    uint32_t write_addr = s_flash_next_addr;
+
+    tmp.magic = SOC_FLASH_MAGIC;
+    tmp.soc_mAh = s_soc.soc_mAh;
+    tmp.full_cap_mAh = s_soc.full_cap_mAh;
     tmp.cycle_count_x10 = s_soc.cycle_count_x10;
-    tmp._pad            = 0;
-    tmp.checksum        = flash_checksum(&tmp);
+    tmp._pad = 0;
+    tmp.checksum = flash_checksum(&tmp);
 
-    HAL_FLASH_Unlock();
+    if (HAL_FLASH_Unlock() != HAL_OK)
+        return;
 
-    /* 擦除页 */
-    FLASH_EraseInitTypeDef erase;
-    erase.TypeErase   = FLASH_TYPEERASE_PAGES;
-    erase.PageAddress = SOC_FLASH_ADDR;
-    erase.NbPages     = 1;
-    uint32_t page_err = 0;
-    HAL_FLASHEx_Erase(&erase, &page_err);
-
-    /* 以半字(16bit)写入 */
-    const uint16_t *src = (const uint16_t *)&tmp;
-    uint32_t addr = SOC_FLASH_ADDR;
-    for (uint32_t i = 0; i < sizeof(SOC_Flash_t) / 2; i++) {
-        HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, addr, src[i]);
-        addr += 2;
+    if (write_addr < SOC_FLASH_ADDR ||
+        write_addr + SOC_FLASH_RECORD_SIZE > SOC_FLASH_END_ADDR ||
+        !flash_range_blank(write_addr, SOC_FLASH_RECORD_SIZE))
+    {
+        if (flash_erase_soc_page() != 0)
+            goto flash_done;
+        write_addr = SOC_FLASH_ADDR;
     }
 
-    HAL_FLASH_Lock();
+    if (flash_program_record(&tmp, write_addr) == 0)
+    {
+        s_flash_next_addr = write_addr + SOC_FLASH_RECORD_SIZE;
+        s_soc.last_saved_mAh = s_soc.soc_mAh;
+    }
+    else
+    {
+        /* Skip a partially programmed record instead of reusing its halfwords. */
+        s_flash_next_addr = write_addr + SOC_FLASH_RECORD_SIZE;
+    }
 
-    /* 更新保存基准 */
-    s_soc.last_saved_mAh = s_soc.soc_mAh;
+flash_done:
+    HAL_FLASH_Lock();
 }
 
 /* ================================================================
@@ -207,10 +284,10 @@ void SOC_Init(void)
 /* ================================================================
  *  SOC_Update — 主更新函数 (每500ms调用一次)
  * ================================================================ */
-void SOC_Update(int current_mA, int pack_mv, int avg_cell_mv,
-                uint8_t chg_on, uint32_t dt_ms)
+void SOC_Update(int current_mA, int avg_cell_mv,
+                int max_cell_mv, int min_cell_mv,
+                uint8_t calibration_valid, uint8_t chg_on, uint32_t dt_ms)
 {
-    (void)pack_mv;  /* 当前仅使用 avg_cell_mv, pack_mv 保留备用 */
 
     /* -------- 1. 库仑积分 --------
      * current_mA: 正=放电, 负=充电
@@ -234,27 +311,33 @@ void SOC_Update(int current_mA, int pack_mv, int avg_cell_mv,
     /* -------- 3. OCV校准 (静置时) --------
      * |I| < 50mA 持续 30s → 用电压查表渐进修正
      */
+    int cell_delta_mv = max_cell_mv - min_cell_mv;
+    uint8_t ocv_input_valid =
+        calibration_valid && max_cell_mv > 0 && min_cell_mv > 0 &&
+        cell_delta_mv >= 0 &&
+        cell_delta_mv <= (int)SOC_OCV_MAX_CELL_DELTA_MV;
+
     if (current_mA > -(int)SOC_IDLE_CURRENT_MA &&
-        current_mA <  (int)SOC_IDLE_CURRENT_MA) {
+        current_mA < (int)SOC_IDLE_CURRENT_MA && ocv_input_valid) {
         s_soc.idle_timer_ms += dt_ms;
         if (s_soc.idle_timer_ms >= SOC_IDLE_TIME_MS) {
             uint8_t ocv_soc = SOC_OcvLookup(avg_cell_mv);
             float ocv_mAh = s_soc.full_cap_mAh * (float)ocv_soc / 100.0f;
             /* 每次修正10%, 避免阶跃 */
             s_soc.soc_mAh += (ocv_mAh - s_soc.soc_mAh) * 0.1f;
-            /* 钳位计时器, 不再继续累加 */
             s_soc.idle_timer_ms = SOC_IDLE_TIME_MS;
         }
     } else {
-        s_soc.idle_timer_ms = 0;   /* 有电流, 重置计时 */
+        s_soc.idle_timer_ms = 0;
     }
 
     /* -------- 4. 满充检测 + 容量学习 --------
      * 条件: 充电MOS开, |I| < 200mA, V_cell ≥ 4150mV
      */
-    if (chg_on && current_mA < 0
-        && (-current_mA) < (int)SOC_FULL_CURRENT_MA
-        && avg_cell_mv >= (int)SOC_FULL_CELL_MV) {
+    /* Use the highest cell because it limits how far the pack can be charged. */
+    if (calibration_valid && chg_on && current_mA <= 0
+        && current_mA > -(int)SOC_FULL_CURRENT_MA
+        && max_cell_mv >= (int)SOC_FULL_CELL_MV) {
 
         /* 容量学习: 空电→满充 期间累积的库仑量 */
         if (s_soc.cap_learn_armed) {
@@ -280,7 +363,9 @@ void SOC_Update(int current_mA, int pack_mv, int avg_cell_mv,
     /* -------- 5. 空电检测 + 容量学习准备 --------
      * V_cell ≤ 2800mV → SOC=0%, 准备下次学习
      */
-    if (avg_cell_mv <= (int)SOC_EMPTY_CELL_MV && avg_cell_mv > 0) {
+    /* Use the lowest cell because it limits usable discharge capacity. */
+    if (calibration_valid && min_cell_mv <= (int)SOC_EMPTY_CELL_MV &&
+        min_cell_mv > 0) {
         s_soc.soc_mAh = 0.0f;
         s_soc.cap_learn_armed = 1;
         s_soc.cap_learn_start_mAh = 0.0f;

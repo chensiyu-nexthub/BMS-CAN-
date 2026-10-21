@@ -52,6 +52,8 @@ class BMSData:
         self.hw_uv = 0
         self.hw_scd = 0
         self.hw_ocd = 0
+        self.hw_dx = 0
+        self.hw_oa = 0
         self.gain = 0
         self.offset = 0
         self.timestamp = ""
@@ -590,6 +592,11 @@ class BMSUpperComputer:
             bms.hw_scd = int(m.group(3))
             bms.hw_ocd = int(m.group(4))
 
+        m = re.search(r"DX=(\d+)\s+OA=(\d+)", text)
+        if m:
+            bms.hw_dx = int(m.group(1))
+            bms.hw_oa = int(m.group(2))
+
         m = re.search(r"GAIN:\s*(\d+)\s*uV.*Offset:\s*(-?\d+)\s*mV", text)
         if m:
             bms.gain = int(m.group(1))
@@ -751,6 +758,8 @@ class BMSUpperComputer:
             reasons.append("过温")
         if bms.data_fault:
             reasons.append("采样失效")
+        if bms.hw_dx or bms.hw_oa:
+            reasons.append("芯片/ALERT故障")
         if bms.cell_diff() > 80:
             reasons.append("压差过大")
 
